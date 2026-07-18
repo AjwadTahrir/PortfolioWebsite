@@ -1,0 +1,15 @@
+export const SKILLS = [
+  { name: "React", cat: "FRONTEND", since: "2025", projects: ["SALTellite"], note: "Default choice for dashboards and data-heavy interfaces." },
+  { name: "Flutter", cat: "FRONTEND", since: "2025", projects: [], note: "Cross-platform mobile applications in Dart." },
+  { name: "FastAPI", cat: "BACKEND", since: "2026", projects: ["SALTellite"], note: "Python APIs serving ML predictions — typed, async, fast to ship." },
+  { name: "Express", cat: "BACKEND", since: "2025", projects: ["FitTrack"], note: "Express 5 with Zod validation and JWT middleware." },
+  { name: "Node.js", cat: "BACKEND", since: "2025", projects: ["FitTrack"], note: "ES-module backends coordinated across a 10-person team." },
+  { name: "MongoDB", cat: "DATA", since: "2025", projects: ["FitTrack"], note: "Mongoose schemas with multi-user data scoping." },
+  { name: "Firebase", cat: "DATA", since: "2025", projects: [], note: "Auth and realtime data for mobile builds." },
+  { name: "scikit-learn", cat: "INTELLIGENCE", since: "2025", projects: ["SALTellite"], note: "Gradient Boosting for salinity risk classification." },
+  { name: "Sentinel-2", cat: "INTELLIGENCE", since: "2026", projects: ["SALTellite"], note: "Satellite imagery via the Sentinel Hub Statistical API." },
+  { name: "Python", cat: "LANGUAGES", since: "2024", projects: ["SALTellite"], note: "ML pipelines and API backends." },
+  { name: "JavaScript", cat: "LANGUAGES", since: "2024", projects: ["FitTrack"], note: "Both sides of the stack." },
+  { name: "Java", cat: "LANGUAGES", since: "2024", projects: [], note: "Object-oriented foundations from coursework." },
+  { name: "Requirements Eng.", cat: "PROCESS", since: "2026", projects: ["Pet Health Records"], note: "50 FRs, 25 NFRs, 16 use cases, MoSCoW prioritisation." },
+];

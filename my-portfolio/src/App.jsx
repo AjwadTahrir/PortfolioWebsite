@@ -1,172 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
+import { INK, PAPER, RED, GREY, FAINT } from "./constants/colors";
+import SatelliteView from "./components/visuals/SatelliteView";
+import Fig from "./components/common/Fig";
+import FeatureGrid from "./components/features/FeatureGrid";
+import FeatureOverlay from "./components/features/FeatureOverlay";
+import useProjectRoute from "./hooks/useProjectRoute";
+import { PROJECTS } from "./data/projects";
+import { STATS } from "./data/stats";
+import { ERAS } from "./data/eras";
+import { REPORTS } from "./data/reports";
+import { NEWSWIRE } from "./data/newswire";
+import { TOC_ITEMS, TOC_IDS } from "./data/toc";
+import { SKILLS } from "./data/skills";
 
 /* ------------------------------------------------------------------
    AJWAD — THE SOFTWARE ENGINEER ISSUE (v5)
    "The first issue of an engineer's career magazine."
-   v5: real rendered visuals (SVG satellite view, SMS mock, dashboards,
-   diagrams) replacing all placeholders; Engineering Log, Systems Built
-   blueprints, Field Reports, magazine closing page.
+
+   Data lives in ./data, visual components in ./components/visuals,
+   colour tokens in ./constants/colors. This file holds the layout
+   primitives and the page composition only.
 ------------------------------------------------------------------- */
-
-const INK = "#141414";
-const PAPER = "#F7F5F0";
-const RED = "#C8371E";
-const GREY = "#6E6A63";
-const FAINT = "#B9B4AA";
-
-/* ================= VISUALS (all generated, no images) ============ */
-
-function SatelliteView({ hero }) {
-  const cells = [];
-  const cols = 14, rows = hero ? 8 : 6;
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const seed = (r * 31 + c * 17) % 97;
-      const coastal = c > cols - 4 - (r % 3);
-      const risk = coastal ? seed % 3 : seed % 7 === 0 ? 1 : 0;
-      cells.push({ r, c, risk, seed });
-    }
-  }
-  const greens = ["#7C8F5E", "#8C9E6B", "#6E8253", "#93A375", "#849868"];
-  const riskFill = ["transparent", "rgba(224,192,103,0.55)", "rgba(200,55,30,0.5)"];
-  const W = 560, H = hero ? 330 : 240, cw = W / cols, ch = H / rows;
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block", background: "#5B6E8C" }} role="img" aria-label="Satellite view of coastal farmland with salinity risk overlay">
-      <rect x={W - 90} y="0" width="90" height={H} fill="#4F678C" />
-      {cells.map(({ r, c, risk, seed }) => (
-        <g key={`${r}-${c}`}>
-          <rect x={c * cw} y={r * ch} width={cw - 1.5} height={ch - 1.5} fill={greens[seed % 5]} />
-          {risk > 0 && <rect x={c * cw} y={r * ch} width={cw - 1.5} height={ch - 1.5} fill={riskFill[risk]} />}
-        </g>
-      ))}
-      <rect x="12" y="12" width="158" height="20" fill="rgba(20,20,20,0.78)" />
-      <text x="20" y="26" fill="#fff" fontFamily="monospace" fontSize="10">SENTINEL-2 · L2A · B11/B8A</text>
-      <rect x="12" y={H - 34} width="196" height="22" fill="rgba(20,20,20,0.78)" />
-      <text x="20" y={H - 19} fill="#fff" fontFamily="monospace" fontSize="10">SELANGOR COAST · ALT 786 KM</text>
-      <g fontFamily="monospace" fontSize="9" fill="#fff">
-        <rect x={W - 162} y="12" width="150" height="46" fill="rgba(20,20,20,0.78)" />
-        <rect x={W - 152} y="20" width="10" height="8" fill="rgba(224,192,103,0.9)" />
-        <text x={W - 136} y="27">SALINITY WATCH</text>
-        <rect x={W - 152} y="36" width="10" height="8" fill="rgba(200,55,30,0.9)" />
-        <text x={W - 136} y="43">HIGH RISK ZONE</text>
-      </g>
-      <g stroke="#fff" strokeWidth="1.5" fill="none">
-        <rect x={cw * 10} y={ch * 2} width={cw * 2} height={ch * 2} strokeDasharray="4 3" />
-      </g>
-      <text x={cw * 10} y={ch * 2 - 5} fill="#fff" fontFamily="monospace" fontSize="9">ZONE 04</text>
-    </svg>
-  );
-}
-
-function SmsMock() {
-  return (
-    <div style={{ background: "#E9E5DD", padding: "22px 18px", height: "100%", minHeight: 240, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ width: 230, background: "#fff", border: `1px solid ${INK}`, boxShadow: `6px 6px 0 ${INK}` }}>
-        <div style={{ background: INK, color: "#fff", padding: "8px 12px", fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: 1 }}>
-          SMS · SALTELLITE
-        </div>
-        <div style={{ padding: 14, fontSize: 12.5, lineHeight: 1.6 }}>
-          <b style={{ color: RED }}>SALT RISK ALERT — ZONE 04</b>
-          <br />High salinity risk detected in your area.
-          <br /><br />Recommended action: increase freshwater irrigation before Thursday.
-          <br /><br /><span style={{ color: GREY, fontSize: 11 }}>Sent 06:00 MYT · no app required</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PipelineDiagram({ title, steps }) {
-  return (
-    <div style={{ border: `1px solid ${INK}`, borderBottom: "none", padding: "18px 16px", background: "#FDFCFA", height: "100%", minHeight: 240 }}>
-      <div className="mono" style={{ color: GREY, letterSpacing: 2, marginBottom: 12 }}>{title}</div>
-      {steps.map((s, i) => (
-        <div key={s} style={{ textAlign: "center" }}>
-          <div style={{ border: `1px solid ${INK}`, padding: "6px 10px", fontFamily: "'Space Mono',monospace", fontSize: 10.5, background: i === steps.length - 1 ? INK : "#fff", color: i === steps.length - 1 ? "#fff" : INK }}>
-            {s}
-          </div>
-          {i < steps.length - 1 && <div style={{ color: GREY, fontSize: 11, lineHeight: "14px" }}>↓</div>}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function FitTrackMock() {
-  const rows = [["Breakfast", "512 kcal"], ["Lunch", "746 kcal"], ["Dinner", "618 kcal"], ["Water", "1.9 / 2.5 L"]];
-  return (
-    <div style={{ background: "#FDFCFA", height: "100%", minHeight: 240 }}>
-      <div style={{ background: INK, color: "#fff", padding: "8px 12px", fontFamily: "'Space Mono',monospace", fontSize: 10, display: "flex", justifyContent: "space-between" }}>
-        <span>FITTRACK · NUTRITION PLANNER</span><span>JWT ✓</span>
-      </div>
-      <div style={{ padding: 14 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <span style={{ fontFamily: "'Fraunces',serif", fontWeight: 900, fontSize: 26 }}>1,876</span>
-          <span className="mono" style={{ color: GREY }}>/ 2,200 KCAL</span>
-        </div>
-        <div style={{ height: 8, background: "#E7E3DA", margin: "8px 0 14px" }}>
-          <div style={{ height: "100%", width: "85%", background: INK }} />
-        </div>
-        {rows.map(([k, v]) => (
-          <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: `1px dotted ${FAINT}`, fontSize: 13 }}>
-            <span>{k}</span><span className="mono">{v}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function UseCaseMock() {
-  return (
-    <div style={{ background: "#FDFCFA", height: "100%", minHeight: 240, padding: 14 }}>
-      <div className="mono" style={{ color: GREY, letterSpacing: 2, marginBottom: 8 }}>USE CASE MODEL · EXCERPT</div>
-      <svg viewBox="0 0 260 150" style={{ width: "100%" }}>
-        {[["Owner", 20, 44], ["Vet", 20, 112]].map(([n, x, y]) => (
-          <g key={n} fontFamily="monospace" fontSize="8">
-            <circle cx={x + 8} cy={y - 14} r="6" fill="none" stroke={INK} />
-            <line x1={x + 8} y1={y - 8} x2={x + 8} y2={y + 6} stroke={INK} />
-            <line x1={x} y1={y - 2} x2={x + 16} y2={y - 2} stroke={INK} />
-            <line x1={x + 8} y1={y + 6} x2={x + 2} y2={y + 16} stroke={INK} />
-            <line x1={x + 8} y1={y + 6} x2={x + 14} y2={y + 16} stroke={INK} />
-            <text x={x + 8} y={y + 28} textAnchor="middle" fill={INK}>{n}</text>
-          </g>
-        ))}
-        <rect x="90" y="10" width="162" height="132" fill="none" stroke={INK} />
-        <text x="171" y="24" textAnchor="middle" fontFamily="monospace" fontSize="8" fill={GREY}>PET HEALTH SYSTEM</text>
-        {[["Book appointment", 58], ["View health record", 92], ["Update treatment", 124]].map(([n, y]) => (
-          <g key={n}>
-            <ellipse cx="171" cy={y} rx="62" ry="13" fill="#fff" stroke={INK} />
-            <text x="171" y={y + 3} textAnchor="middle" fontFamily="monospace" fontSize="7.5" fill={INK}>{n}</text>
-          </g>
-        ))}
-        <line x1="36" y1="40" x2="109" y2="56" stroke={GREY} />
-        <line x1="36" y1="46" x2="109" y2="88" stroke={GREY} />
-        <line x1="36" y1="110" x2="109" y2="122" stroke={GREY} />
-        <line x1="36" y1="106" x2="109" y2="94" stroke={GREY} />
-      </svg>
-    </div>
-  );
-}
-
-function MoscowMock() {
-  const cols = [["MUST", 5, INK], ["SHOULD", 4, "#4A4A55"], ["COULD", 3, GREY], ["WON'T", 2, FAINT]];
-  return (
-    <div style={{ background: "#FDFCFA", height: "100%", minHeight: 240, padding: 14 }}>
-      <div className="mono" style={{ color: GREY, letterSpacing: 2, marginBottom: 10 }}>MOSCOW BACKLOG · 23 ITEMS</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
-        {cols.map(([label, n, color]) => (
-          <div key={label}>
-            <div className="mono" style={{ fontSize: 9, borderBottom: `2px solid ${color}`, paddingBottom: 4, marginBottom: 6 }}>{label}</div>
-            {Array.from({ length: n }).map((_, i) => (
-              <div key={i} style={{ height: 14, background: "#fff", border: `1px solid ${FAINT}`, marginBottom: 4 }} />
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ================= PRIMITIVES ==================================== */
 
@@ -274,17 +128,6 @@ function useActiveSection(ids) {
   return active;
 }
 
-function Fig({ children, caption, no }) {
-  return (
-    <figure style={{ margin: 0, display: "flex", flexDirection: "column" }}>
-      <div style={{ border: `1px solid ${INK}`, flex: 1 }}>{children}</div>
-      <figcaption className="mono" style={{ color: GREY, padding: "8px 0", borderBottom: `1px solid ${INK}` }}>
-        <span style={{ color: INK, fontWeight: 700 }}>FIG. {no}</span> — {caption}
-      </figcaption>
-    </figure>
-  );
-}
-
 function PageFoot({ no }) {
   return (
     <div className="mono" style={{ display: "flex", justifyContent: "space-between", color: FAINT, paddingTop: 40, letterSpacing: 1 }}>
@@ -309,7 +152,6 @@ function QuoteSpread({ children, credit }) {
   );
 }
 
-/* Interactive cross-reference skill index: hover/tap an entry, see its dossier */
 /* Newswire ticker: micro-headlines from the issue; pauses on hover, click to jump to the article */
 function Newswire() {
   const loop = [...NEWSWIRE, ...NEWSWIRE];
@@ -421,257 +263,6 @@ function SectionBreak({ no, label }) {
   );
 }
 
-/* ================= DATA ========================================== */
-
-const PROJECTS = [
-  {
-    id: "saltellite",
-    no: "01",
-    tier: "main",
-    kicker: "MAIN FEATURE · AI × REMOTE SENSING",
-    name: "SALTellite",
-    dek: "An early-warning system that watches Malaysia's coastal farmland from orbit — and texts farmers before the salt arrives.",
-    problem: "Saline intrusion creeps into coastal paddy fields silently. By the time farmers see the damage, the harvest is already lost.",
-    tech: "Sentinel-2 imagery flows through the Sentinel Hub Statistical API into a Gradient Boosting model that flags salinity risk per zone. Llama 3.3 (via Groq) turns the prediction into plain-language advice, and Infobip delivers it as SMS — no app install required.",
-    impact: "Built for the Shortcut Asia Challenge 2026; cleared both the screening and in-person presentation rounds.",
-    pull: "“The best alert is the one a farmer gets before the damage — not after.”",
-    stack: ["React", "FastAPI", "Sentinel-2", "scikit-learn", "Groq", "Infobip"],
-    link: "https://github.com/AjwadTahrir/saltellite",
-    decisions: [
-      ["Gradient Boosting over deep learning", "Small labeled dataset and tabular spectral features — a GB model trains in seconds, explains its feature importances, and doesn't need a GPU the project couldn't afford."],
-      ["SMS over an app", "The users are farmers, not app installers. Infobip SMS meant zero onboarding — but it constrains alerts to plain text, which pushed the LLM-explanation design."],
-      ["What I'd do differently", "Invest earlier in explaining the stack's internals — the judges' feedback was that the demo outran my ability to defend every component under questioning."],
-    ],
-    year: "2026",
-    visuals: [
-      { no: "1.1", caption: "Sentinel-2 salinity risk overlay, Selangor coast", el: <SatelliteView /> },
-      { no: "1.2", caption: "Prediction pipeline, satellite to SMS", el: <PipelineDiagram title="ML PIPELINE" steps={["Sentinel-2 Satellite", "Image Processing", "Feature Extraction", "Gradient Boosting", "Risk Prediction", "Llama 3.3 Explanation", "SMS Farmer Alert"]} /> },
-      { no: "1.3", caption: "Farmer-facing SMS alert, Zone 04", el: <SmsMock /> },
-    ],
-  },
-  {
-    id: "fittrack",
-    no: "02",
-    tier: "feature",
-    kicker: "FEATURE STORY · FULL-STACK WEB",
-    name: "FitTrack",
-    dek: "The Nutrition Planner module of a team fitness app — owned end to end, backend to browser.",
-    problem: "A ten-person team app lives or dies on its plumbing: auth, validation, and data scoping that don't leak between users.",
-    tech: "Express 5 + MongoDB backend with JWT auth, Zod validation, and multi-user scoping. Water tracking, dashboard wiring, and the team's whole Git workflow coordinated so ten people could ship without collisions.",
-    impact: "Delivered across two course phases (WIF2003), from Bootstrap frontend to full ES-module backend.",
-    pull: "“Auth, validation, scoping — the unglamorous parts done properly.”",
-    stack: ["Node.js", "Express 5", "MongoDB", "JWT", "Zod"],
-    link: null,
-    year: "2025–26",
-    decisions: [
-      ["Zod at the API boundary", "Validating every request body at the edge meant bad data never reached Mongoose — cheaper than debugging corrupted documents later."],
-      ["JWT over sessions", "Stateless auth kept the backend simple for a team without shared session infrastructure — the trade-off is no server-side revocation."],
-      ["What I'd do differently", "Set up the multi-user data scoping pattern on day one instead of retrofitting it — retrofit touched nearly every query."],
-    ],
-    visuals: [
-      { no: "2.1", caption: "Nutrition Planner interface, daily view", el: <FitTrackMock /> },
-      { no: "2.2", caption: "Request path, client to database", el: <PipelineDiagram title="ARCHITECTURE" steps={["React Frontend", "Express API", "Zod Validation", "JWT Middleware", "MongoDB"]} /> },
-    ],
-  },
-  {
-    id: "pethealth",
-    no: "03",
-    tier: "note",
-    kicker: "ENGINEERING NOTES · REQUIREMENTS",
-    name: "Pet Health Records",
-    dek: "Leading ten people through fifty functional requirements — and a privacy study on the side.",
-    problem: "Before a vet appointment system can be built right, it has to be specified right — by ten people who agree.",
-    tech: "Full requirements package: 50 FRs, 25 NFRs, 16 use cases, MoSCoW-prioritised backlog. Companion Privacy-by-Design paper surveyed 105 respondents with full statistical analysis (Cronbach's α = .955).",
-    impact: "Team lead for Group 10 — deliverables, rubric compliance, and documentation across the semester.",
-    pull: "“Before you build it right, you have to specify it right.”",
-    stack: ["Requirements", "Use cases", "MoSCoW", "Statistics"],
-    link: null,
-    year: "2026",
-    decisions: [
-      ["MoSCoW over numeric priority scores", "With ten people voting, a four-bucket system forced real conversations about scope — numeric scores just hide disagreement in decimals."],
-      ["Surveying 105 respondents", "The Privacy-by-Design paper needed statistical weight over anecdote — Cronbach's α = .955 made the construct defensible."],
-      ["What I'd do differently", "Freeze the requirements baseline earlier — late-arriving 'must-haves' cost the team rework in the final weeks."],
-    ],
-    visuals: [
-      { no: "3.1", caption: "Use case model, appointment flows", el: <UseCaseMock /> },
-      { no: "3.2", caption: "MoSCoW prioritisation board", el: <MoscowMock /> },
-    ],
-  },
-];
-
-const STATS = [
-  ["50+", "Functional requirements written"],
-  ["105", "Survey responses analysed"],
-  ["10", "Developers coordinated"],
-  ["786 km", "Satellite orbit height"],
-  ["3+", "AI systems built"],
-];
-
-const ERAS = [
-  ["2026", "AI SYSTEMS ERA", [
-    ["SALTellite", "AI × Satellite · Sentinel-2 + ML"],
-    ["Requirements leadership", "10-person team"],
-  ]],
-  ["2025", "FULL-STACK ERA", [
-    ["First team products shipped", "Node · MongoDB"],
-    ["First ML systems", "scikit-learn"],
-    ["Flutter applications", "Mobile"],
-  ]],
-  ["2024", "FOUNDATION ERA", [
-    ["Software Engineering, Universiti Malaya", "Enrolled"],
-    ["First applications built", "Java · Python"],
-  ]],
-  ["2023", "ON-RAMP", [
-    ["Foundation studies", "PASUM"],
-  ]],
-];
-
-const REPORTS = [
-  ["SHORTCUT ASIA CHALLENGE 2026", ["Screening round passed", "In-person presentation round completed"]],
-  ["SOFTWARE ENGINEERING PROJECT", ["Managed 10-person team", "Delivered full requirements package"]],
-  ["RESEARCH PROJECT", ["105 survey respondents", "Cronbach α = .955, full statistical analysis"]],
-];
-
-const NEWSWIRE = [
-  ["SALTELLITE CLEARS SHORTCUT ASIA PRESENTATION ROUND", "saltellite"],
-  ["GRADIENT BOOSTING MODEL FLAGS SALINITY FROM ORBIT", "saltellite"],
-  ["10-PERSON TEAM SHIPS FULL REQUIREMENTS PACKAGE", "pethealth"],
-  ["NUTRITION PLANNER MODULE DELIVERED END TO END", "fittrack"],
-  ["105 RESPONDENTS SURVEYED FOR PRIVACY-BY-DESIGN STUDY", "pethealth"],
-  ["SMS ALERTS REACH FARMERS — NO APP REQUIRED", "saltellite"],
-  ["JWT AUTH + ZOD VALIDATION HOLD THE LINE", "fittrack"],
-];
-
-const TOC_ITEMS = [
-  ["author", "Profile", "00"],
-  ["features", "Features", "01"],
-  ["notes", "Notes", "02"],
-  ["log", "Chronicles", "03"],
-  ["blueprint", "Blueprint", "04"],
-  ["reports", "Reports", "05"],
-  ["index", "Stack", "06"],
-  ["letters", "Letters", "07"],
-];
-const TOC_IDS = TOC_ITEMS.map((t) => t[0]);
-
-const SKILLS = [
-  { name: "React", cat: "FRONTEND", since: "2025", projects: ["SALTellite"], note: "Default choice for dashboards and data-heavy interfaces." },
-  { name: "Flutter", cat: "FRONTEND", since: "2025", projects: [], note: "Cross-platform mobile applications in Dart." },
-  { name: "FastAPI", cat: "BACKEND", since: "2026", projects: ["SALTellite"], note: "Python APIs serving ML predictions — typed, async, fast to ship." },
-  { name: "Express", cat: "BACKEND", since: "2025", projects: ["FitTrack"], note: "Express 5 with Zod validation and JWT middleware." },
-  { name: "Node.js", cat: "BACKEND", since: "2025", projects: ["FitTrack"], note: "ES-module backends coordinated across a 10-person team." },
-  { name: "MongoDB", cat: "DATA", since: "2025", projects: ["FitTrack"], note: "Mongoose schemas with multi-user data scoping." },
-  { name: "Firebase", cat: "DATA", since: "2025", projects: [], note: "Auth and realtime data for mobile builds." },
-  { name: "scikit-learn", cat: "INTELLIGENCE", since: "2025", projects: ["SALTellite"], note: "Gradient Boosting for salinity risk classification." },
-  { name: "Sentinel-2", cat: "INTELLIGENCE", since: "2026", projects: ["SALTellite"], note: "Satellite imagery via the Sentinel Hub Statistical API." },
-  { name: "Python", cat: "LANGUAGES", since: "2024", projects: ["SALTellite"], note: "ML pipelines and API backends." },
-  { name: "JavaScript", cat: "LANGUAGES", since: "2024", projects: ["FitTrack"], note: "Both sides of the stack." },
-  { name: "Java", cat: "LANGUAGES", since: "2024", projects: [], note: "Object-oriented foundations from coursework." },
-  { name: "Requirements Eng.", cat: "PROCESS", since: "2026", projects: ["Pet Health Records"], note: "50 FRs, 25 NFRs, 16 use cases, MoSCoW prioritisation." },
-];
-
-/* ================= FEATURE ARTICLE =============================== */
-
-function Feature({ p }) {
-  const [open, setOpen] = useState(false);
-  const topRef = useRef(null);
-  const main = p.tier === "main";
-  const note = p.tier === "note";
-  useEffect(() => {
-    const onOpen = (e) => { if (e.detail === p.id) setOpen(true); };
-    window.addEventListener("open-article", onOpen);
-    return () => window.removeEventListener("open-article", onOpen);
-  }, [p.id]);
-  const toggle = () => {
-    setOpen(!open);
-    if (!open) setTimeout(() => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-  };
-  return (
-    <div id={p.id} ref={topRef} style={{ scrollMarginTop: 60 }}>
-      <div
-        className="article-row"
-        role="button"
-        tabIndex={0}
-        onClick={toggle}
-        onKeyDown={(e) => e.key === "Enter" && toggle()}
-        style={{ padding: main ? "44px 0" : note ? "24px 0" : "34px 0" }}
-      >
-        <div className="no" style={{ fontSize: main ? 56 : note ? 30 : 44 }}>{p.no}</div>
-        <div>
-          <div className="kicker">{p.kicker}</div>
-          <h2 className="headline" style={{ fontSize: main ? "clamp(32px,5.5vw,60px)" : note ? "clamp(20px,3vw,30px)" : "clamp(26px,4vw,44px)" }}>
-            {p.name}
-          </h2>
-          <p style={{ color: GREY, fontSize: main ? 17 : 15.5, lineHeight: 1.55, margin: "10px 0 0", maxWidth: main ? 640 : 560 }}>
-            {p.dek}
-          </p>
-        </div>
-        <div className="article-side" style={{ textAlign: "right" }}>
-          <div className="mono" style={{ color: GREY }}>{p.year}</div>
-          <div className="mono" style={{ marginTop: 8, lineHeight: 1.8, color: GREY }}>
-            {p.stack.slice(0, 3).map((s) => <div key={s}>{s}</div>)}
-          </div>
-          <div className="mono" style={{ color: open ? GREY : RED, marginTop: 10 }}>{open ? "CLOSE ✕" : "READ →"}</div>
-        </div>
-      </div>
-
-      <div className="spread" style={{ maxHeight: open ? 3400 : 0, opacity: open ? 1 : 0 }}>
-        <div style={{ borderTop: `3px solid ${INK}`, padding: "30px 0 40px" }}>
-          <div className="frames-row">
-            {p.visuals.map((v) => (
-              <Fig key={v.no} no={v.no} caption={v.caption}>{v.el}</Fig>
-            ))}
-          </div>
-          <div className="spread-grid" style={{ marginTop: 28 }}>
-            <div>
-              <h3 className="section-h">THE PROBLEM</h3>
-              <p className="body-p">{p.problem}</p>
-            </div>
-            <div>
-              <h3 className="section-h">THE TECHNOLOGY</h3>
-              <p className="body-p">{p.tech}</p>
-            </div>
-          </div>
-          <blockquote className="pull">{p.pull}</blockquote>
-          {p.decisions && (
-            <div style={{ marginTop: 6 }}>
-              <h3 className="section-h" style={{ color: RED }}>DECISIONS & TRADE-OFFS</h3>
-              <div className="decisions-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${p.decisions.length}, 1fr)`, gap: 24, marginTop: 12 }}>
-                {p.decisions.map(([title, body]) => (
-                  <div key={title} style={{ borderTop: `2px solid ${INK}`, paddingTop: 12 }}>
-                    <div style={{ fontFamily: "'Fraunces',serif", fontWeight: 700, fontSize: 17, marginBottom: 8 }}>{title}</div>
-                    <p className="body-p" style={{ fontSize: 14.5, lineHeight: 1.65, color: "#3E3D48" }}>{body}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          <div className="spread-grid" style={{ marginTop: 28 }}>
-            <div>
-              <h3 className="section-h">THE RESULT</h3>
-              <p className="body-p">{p.impact}</p>
-            </div>
-            <div>
-              <h3 className="section-h">FILED UNDER</h3>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 6 }}>
-                {p.stack.map((s) => (
-                  <span key={s} className="mono" style={{ border: `1px solid ${FAINT}`, color: GREY, padding: "4px 10px" }}>{s}</span>
-                ))}
-              </div>
-              {p.link && (
-                <a href={p.link} target="_blank" rel="noreferrer" className="cta" style={{ marginTop: 18 }}>
-                  READ THE CODE ↗
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="rule" />
-    </div>
-  );
-}
-
 /* ================= PAGE ========================================== */
 
 export default function Portfolio() {
@@ -683,6 +274,8 @@ export default function Portfolio() {
   }, []);
   const activeSection = useActiveSection(TOC_IDS);
   const [skill, setSkill] = useState(SKILLS[0]);
+  const route = useProjectRoute(PROJECTS);
+  const activeProject = PROJECTS.find((p) => p.id === route.activeId) || null;
 
   if (printMode) {
     return (
@@ -872,6 +465,70 @@ export default function Portfolio() {
         .navbar-no { color: ${FAINT}; }
         .navbar-link.active .navbar-no { color: ${RED}; }
         @media (max-width: 900px){ .navbar-brand { display: none; } }
+
+        /* ---- Features: layout engine grid ---- */
+        .feat-section { padding-top: 40px; }
+        .feat-section__head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .feat-section__label { color: ${RED}; letter-spacing: 3px; white-space: nowrap; }
+        .feat-section__rule { flex: 1; border-top: 1px solid ${INK}; }
+        .feat-section__count { color: ${FAINT}; white-space: nowrap; }
+        .feat-grid { display: grid; gap: 18px; }
+        .feat-grid--cover { grid-template-columns: 1fr; }
+        .feat-grid--features { grid-template-columns: repeat(2, 1fr); }
+        .feat-grid--notes { grid-template-columns: repeat(3, 1fr); }
+
+        /* ---- Features: tiles ---- */
+        .feat-tile { position: relative; display: flex; flex-direction: column; text-align: left;
+          border: 1px solid ${INK}; background: #FDFCFA; cursor: pointer; padding: 0;
+          font-family: inherit; color: ${INK}; overflow: hidden;
+          transition: transform .18s ease, box-shadow .18s ease; }
+        .feat-tile:hover { transform: translateY(-3px); box-shadow: 6px 8px 0 ${INK}; }
+        .feat-tile:focus-visible { outline: 3px solid ${INK}; outline-offset: 3px; }
+        .feat-tile__visual { border-bottom: 1px solid ${INK}; overflow: hidden; }
+        .feat-tile--cover .feat-tile__visual { max-height: 360px; }
+        .feat-tile--feature .feat-tile__visual { max-height: 220px; }
+        .feat-tile__body { display: flex; flex-direction: column; gap: 10px; padding: 20px 22px; flex: 1; }
+        .feat-tile__label { color: ${RED}; }
+        .feat-tile__name { font-family: 'Fraunces', serif; font-weight: 900; line-height: 1.04; margin: 0;
+          transition: color .15s ease; }
+        .feat-tile:hover .feat-tile__name { color: ${RED}; }
+        .feat-tile__dek { color: ${GREY}; font-size: 14.5px; line-height: 1.55; margin: 0; max-width: 560px; }
+        .feat-tile--note { background: ${PAPER}; }
+        .feat-tile__foot { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+        .feat-tile__stack { color: ${GREY}; font-size: 11px; letter-spacing: .3px; }
+        .feat-tile__meta { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px dotted ${FAINT}; padding-top: 10px; }
+        .feat-tile__cta { color: ${FAINT}; transition: color .15s ease; }
+        .feat-tile:hover .feat-tile__cta { color: ${RED}; }
+
+        @media (max-width: 900px){
+          .feat-grid--notes { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px){
+          .feat-grid--features, .feat-grid--notes { grid-template-columns: 1fr; }
+        }
+
+        /* ---- Features: overlay ---- */
+        .feat-overlay { position: fixed; inset: 0; z-index: 200; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .feat-overlay__backdrop { position: fixed; inset: 0; background: rgba(20,20,20,0.55);
+          backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0;
+          transition: opacity .3s ease; }
+        .feat-overlay__backdrop.show { opacity: 1; }
+        .feat-overlay__panel { position: relative; z-index: 1; width: min(1080px, 94vw);
+          margin: 5vh auto 8vh; background: ${PAPER}; color: ${INK}; border: 1px solid ${INK};
+          box-shadow: 0 30px 90px rgba(20,20,20,.35); padding: clamp(20px, 3vw, 40px);
+          opacity: 0; transform: translateY(34px) scale(.985);
+          transition: opacity .32s ease, transform .32s cubic-bezier(.2,.7,.3,1); }
+        .feat-overlay__panel.show { opacity: 1; transform: none; }
+        .feat-overlay__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .feat-overlay__head { margin-bottom: 22px; }
+        .feat-overlay__close { background: none; border: 1px solid ${INK}; color: ${INK};
+          font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px;
+          padding: 6px 12px; cursor: pointer; }
+        .feat-overlay__close:hover { background: ${INK}; color: ${PAPER}; }
+        @media (prefers-reduced-motion: reduce){
+          .feat-overlay__backdrop, .feat-overlay__panel { transition: none; }
+          .feat-overlay__panel { transform: none; }
+        }
       `}</style>
 
       <ProgressRule />
@@ -906,7 +563,7 @@ export default function Portfolio() {
 
       {/* COVER FEATURE */}
       <section className="wrap" style={{ paddingTop: 40, paddingBottom: 30 }}>
-        <a href="#saltellite" style={{ textDecoration: "none", color: INK }}>
+        <div role="button" tabIndex={0} onClick={() => route.open("saltellite")} onKeyDown={(e) => e.key === "Enter" && route.open("saltellite")} style={{ cursor: "pointer", color: INK }}>
           <div className="cover-grid" style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr", gap: 50, alignItems: "center" }}>
             <Fig no="0.1" caption="SALTellite — Sentinel-2 salinity monitoring, Selangor coast">
               <SatelliteView hero />
@@ -926,7 +583,7 @@ export default function Portfolio() {
               <div style={{ marginTop: 26 }}><span className="stamp">EST. PASUM → UM</span></div>
             </div>
           </div>
-        </a>
+        </div>
       </section>
 
       {/* TICKER */}
@@ -1022,12 +679,10 @@ export default function Portfolio() {
 
       {/* FEATURES */}
       <main className="wrap" id="features" style={{ paddingTop: 26 }}>
-        <div className="rule-thick" />
-        {PROJECTS.map((p, i) => (
-          <Reveal key={p.id} delay={0.04 * i}>
-            <Feature p={p} />
-          </Reveal>
-        ))}
+        <div className="rule-thick" style={{ marginBottom: 4 }} />
+        <Reveal>
+          <FeatureGrid projects={PROJECTS} onOpen={route.open} />
+        </Reveal>
       </main>
 
       {/* FULL-PAGE QUOTE SPREAD */}
@@ -1215,6 +870,8 @@ export default function Portfolio() {
           </div>
         </Reveal>
       </section>
+
+      <FeatureOverlay project={activeProject} onClose={route.close} />
     </div>
   );
 }

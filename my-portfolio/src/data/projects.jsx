@@ -1,10 +1,31 @@
 import React from "react";
-import SatelliteView from "../components/visuals/SatelliteView";
-import SmsMock from "../components/visuals/SmsMock";
+import Screenshot from "../components/visuals/Screenshot";
+import saltelliteShot from "../assets/screenshots/saltellite1.png";
 import PipelineDiagram from "../components/visuals/PipelineDiagram";
-import FitTrackMock from "../components/visuals/FitTrackMock";
+import FitTrackShot from "../assets/screenshots/fittrack.png";
 import UseCaseMock from "../components/visuals/UseCaseMock";
 import MoscowMock from "../components/visuals/MoscowMock";
+import bizbuddyMenuShot from "../assets/screenshots/bizbuddy/menu.png";
+import bizbuddyAdvisoryShot from "../assets/screenshots/bizbuddy/advisory-chat.png";
+import bizbuddyReceiptShot from "../assets/screenshots/bizbuddy/receipt-scan.png";
+import bizbuddyFinanceShot from "../assets/screenshots/bizbuddy/finance-summary.png";
+import bizbuddyCreditReportShot from "../assets/screenshots/bizbuddy/credit-report.png";
+import bizbuddyCreditGateShot from "../assets/screenshots/bizbuddy/credit-gate.png";
+import bizbuddyDashboardShot from "../assets/screenshots/bizbuddy/dashboard.png";
+import doctelemyOnboardingShot from "../assets/screenshots/doctelemy/onboarding.png";
+import doctelemyHomeShot from "../assets/screenshots/doctelemy/home-dashboard.png";
+import doctelemyVitalsShot from "../assets/screenshots/doctelemy/vitals-entry.png";
+import doctelemySymptomsShot from "../assets/screenshots/doctelemy/symptoms-entry.png";
+import doctelemyMildShot from "../assets/screenshots/doctelemy/assessment-mild.png";
+import doctelemySevereShot from "../assets/screenshots/doctelemy/assessment-severe.png";
+import doctelemyLogoShot from "../assets/screenshots/doctelemy/logo.png";
+import foodiesSigninShot from "../assets/screenshots/foodies/signin.png";
+import foodiesHomeShot from "../assets/screenshots/foodies/home-dashboard.png";
+import foodiesMyFoodsShot from "../assets/screenshots/foodies/my-foods.png";
+import foodiesListItemShot from "../assets/screenshots/foodies/list-item.png";
+import foodiesSearchShot from "../assets/screenshots/foodies/search.png";
+import foodiesProfileShot from "../assets/screenshots/foodies/profile.png";
+
 
 export const PROJECTS = [
   {
@@ -28,9 +49,8 @@ export const PROJECTS = [
     ],
     year: "2026",
     visuals: [
-      { no: "1.1", caption: "Sentinel-2 salinity risk overlay, Selangor coast", el: <SatelliteView /> },
-      { no: "1.2", caption: "Prediction pipeline, satellite to SMS", el: <PipelineDiagram title="ML PIPELINE" steps={["Sentinel-2 Satellite", "Image Processing", "Feature Extraction", "Gradient Boosting", "Risk Prediction", "Llama 3.3 Explanation", "SMS Farmer Alert"]} /> },
-      { no: "1.3", caption: "Farmer-facing SMS alert, Zone 04", el: <SmsMock /> },
+      { no: "1.1", caption: "Sentinel-2 salinity risk overlay, Selangor coast", el: <Screenshot src={saltelliteShot} alt="SALTellite dashboard" />
+     },
     ],
   },
   {
@@ -54,7 +74,7 @@ export const PROJECTS = [
       ["What I'd do differently", "Set up the multi-user data scoping pattern on day one instead of retrofitting it — retrofit touched nearly every query."],
     ],
     visuals: [
-      { no: "2.1", caption: "Nutrition Planner interface, daily view", el: <FitTrackMock /> },
+      { no: "2.1", caption: "Nutrition Planner interface, daily view", el:  <Screenshot src={FitTrackShot} alt="FitTrack dashboard" /> },
       { no: "2.2", caption: "Request path, client to database", el: <PipelineDiagram title="ARCHITECTURE" steps={["React Frontend", "Express API", "Zod Validation", "JWT Middleware", "MongoDB"]} /> },
     ],
   },
@@ -98,7 +118,14 @@ export const PROJECTS = [
     link: null, // TODO: repo link if public
     year: "2026",
     visuals: [
-      { no: "4.1", caption: "Message flow, WhatsApp to advisory", el: <PipelineDiagram title="ARCHITECTURE" steps={["WhatsApp Message", "Webhook (Flask)", "Firestore Records", "Gemini Analysis", "Reply + Dashboard"]} /> },
+      { no: "4.1", caption: "Cross-border impact, MSMEs onboarded across ASEAN", el: <Screenshot src={bizbuddyDashboardShot} alt="BizBuddy dashboard" /> },
+      { no: "4.2", caption: "Main menu, WhatsApp bot commands", el: <Screenshot src={bizbuddyMenuShot} alt="BizBuddy main menu on WhatsApp" /> },
+      { no: "4.3", caption: "AI Penasihat: personalised promotion advice", el: <Screenshot src={bizbuddyAdvisoryShot} alt="BizBuddy AI business advisory chat" /> },
+      { no: "4.4", caption: "A sale logged automatically from a receipt photo", el: <Screenshot src={bizbuddyReceiptShot} alt="BizBuddy payment recorded from a photo" /> },
+      { no: "4.5", caption: "Auto-generated sales and profit summary", el: <Screenshot src={bizbuddyFinanceShot} alt="BizBuddy financial summary" /> },
+      { no: "4.6", caption: "Credit score breakdown for loan eligibility", el: <Screenshot src={bizbuddyCreditReportShot} alt="BizBuddy credit score report" /> },
+      { no: "4.7", caption: "Guided path to improve a below-threshold score", el: <Screenshot src={bizbuddyCreditGateShot} alt="BizBuddy credit score gate and SSM verification" /> },
+      { no: "4.8", caption: "Message flow, WhatsApp to advisory", el: <PipelineDiagram title="ARCHITECTURE" steps={["WhatsApp Message", "Webhook (Flask)", "Firestore Records", "Gemini Analysis", "Reply + Dashboard"]} /> },
     ],
   },
   {
@@ -116,7 +143,14 @@ export const PROJECTS = [
     link: null, // TODO
     year: "2026",
     visuals: [
-      { no: "5.1", caption: "Sync path, device-local to cloud", el: <PipelineDiagram title="OFFLINE-FIRST FLOW" steps={["Patient Input", "SQLite (Local)", "Gemini Triage", "Firebase Sync", "Clinic Dashboard"]} /> },
+      { no: "5.1", caption: "App identity", el: <Screenshot src={doctelemyLogoShot} alt="DocTeleMY" /> },
+      { no: "5.2", caption: "Onboarding, AI triage support for rural clinics", el: <Screenshot src={doctelemyOnboardingShot} alt="DocTeleMY onboarding screen" /> },
+      { no: "5.3", caption: "Clinic dashboard, daily case stats at a glance", el: <Screenshot src={doctelemyHomeShot} alt="DocTeleMY home dashboard for a clinic nurse" /> },
+      { no: "5.4", caption: "Vital signs entry, works fully offline", el: <Screenshot src={doctelemyVitalsShot} alt="DocTeleMY vital signs entry form" /> },
+      { no: "5.5", caption: "Structured symptom capture", el: <Screenshot src={doctelemySymptomsShot} alt="DocTeleMY symptom selection screen" /> },
+      { no: "5.6", caption: "Gemini triage verdict: mild case", el: <Screenshot src={doctelemyMildShot} alt="DocTeleMY mild assessment result" /> },
+      { no: "5.7", caption: "Gemini triage verdict: severe case flagged for emergency care", el: <Screenshot src={doctelemySevereShot} alt="DocTeleMY severe emergency assessment result" /> },
+      { no: "5.8", caption: "Sync path, device-local to cloud", el: <PipelineDiagram title="OFFLINE-FIRST FLOW" steps={["Patient Input", "SQLite (Local)", "Gemini Triage", "Firebase Sync", "Clinic Dashboard"]} /> },
     ],
   },
   {
@@ -133,6 +167,15 @@ export const PROJECTS = [
     stack: ["Java", "Android Studio", "Firebase", "OSMDroid"],
     link: null, // TODO
     year: "2026",
+    visuals: [
+      { no: "7.1", caption: "Listing path, seller to nearby claimant", el: <PipelineDiagram title="ARCHITECTURE" steps={["List Food Item", "Firebase Realtime DB", "OSMDroid Map Sync", "Nearby Users Notified", "Live Claim + Pickup"]} /> },
+      { no: "7.2", caption: "Sign in to start saving food", el: <Screenshot src={foodiesSigninShot} alt="Foodies sign in screen" /> },
+      { no: "7.3", caption: "Home, featured foods nearby", el: <Screenshot src={foodiesHomeShot} alt="Foodies home dashboard" /> },
+      { no: "7.4", caption: "My Foods, sell or give an item away", el: <Screenshot src={foodiesMyFoodsShot} alt="Foodies My Foods add-item sheet" /> },
+      { no: "7.5", caption: "Listing a food item for sale", el: <Screenshot src={foodiesListItemShot} alt="Foodies list an item for sale form" /> },
+      { no: "7.6", caption: "Search, live food listings", el: <Screenshot src={foodiesSearchShot} alt="Foodies search results" /> },
+      { no: "7.7", caption: "Profile, impact stats and account", el: <Screenshot src={foodiesProfileShot} alt="Foodies profile screen" /> },
+    ],
   },
   {
     id: "alzheimers-iot",

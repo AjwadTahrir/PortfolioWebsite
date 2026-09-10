@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { INK, PAPER, RED, GREY, FAINT } from "./constants/colors";
-import SatelliteView from "./components/visuals/SatelliteView";
+import Screenshot from "./components/visuals/Screenshot";
+import saltelliteShot from "./assets/screenshots/saltellite2.png";
 import Fig from "./components/common/Fig";
 import FeatureGrid from "./components/features/FeatureGrid";
 import FeatureOverlay from "./components/features/FeatureOverlay";
@@ -12,6 +13,10 @@ import { REPORTS } from "./data/reports";
 import { NEWSWIRE } from "./data/newswire";
 import { TOC_ITEMS, TOC_IDS } from "./data/toc";
 import { SKILLS } from "./data/skills";
+import FieldNotesMap from "./components/features/FieldNotesMap";
+import RunnersLog from "./components/features/RunnersLog";
+import ArchiveGrid from "./components/archive/ArchiveGrid";
+import ArchiveOverlay from "./components/archive/ArchiveOverlay";
 
 /* ------------------------------------------------------------------
    AJWAD — THE SOFTWARE ENGINEER ISSUE (v5)
@@ -274,6 +279,7 @@ export default function Portfolio() {
   }, []);
   const activeSection = useActiveSection(TOC_IDS);
   const [skill, setSkill] = useState(SKILLS[0]);
+  const [archiveId, setArchiveId] = useState(null);
   const route = useProjectRoute(PROJECTS);
   const activeProject = PROJECTS.find((p) => p.id === route.activeId) || null;
 
@@ -529,6 +535,28 @@ export default function Portfolio() {
           .feat-overlay__backdrop, .feat-overlay__panel { transition: none; }
           .feat-overlay__panel { transform: none; }
         }
+          .archive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, minmax(130px, auto));
+  gap: 18px;
+  grid-template-areas:
+    "running running university university"
+    "running running travel photography"
+    "life life life life";
+}
+  .archive-tile--running { grid-area: running; }
+  .archive-tile--university { grid-area: university; }
+  .archive-tile--travel { grid-area: travel; }
+  .archive-tile--photography { grid-area: photography; }
+  .archive-tile--life { grid-area: life; min-height: 110px; }
+
+  @media (max-width: 720px){
+    .archive-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas: "travel" "university" "running" "photography" "life";
+    }
+  }
       `}</style>
 
       <ProgressRule />
@@ -566,7 +594,7 @@ export default function Portfolio() {
         <div role="button" tabIndex={0} onClick={() => route.open("saltellite")} onKeyDown={(e) => e.key === "Enter" && route.open("saltellite")} style={{ cursor: "pointer", color: INK }}>
           <div className="cover-grid" style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr", gap: 50, alignItems: "center" }}>
             <Fig no="0.1" caption="SALTellite — Sentinel-2 salinity monitoring, Selangor coast">
-              <SatelliteView hero />
+              <Screenshot src={saltelliteShot} alt="SALTellite dashboard" />
             </Fig>
             <div>
               <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }} className="mono">
@@ -589,50 +617,9 @@ export default function Portfolio() {
       {/* TICKER */}
       <Newswire />
 
-      {/* EDITOR'S LETTER — unnumbered front matter */}
-      <section className="wrap" id="editors-letter" style={{ paddingTop: 60, paddingBottom: 40 }}>
-        <Reveal>
-          <div className="letter-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr 1fr", gap: 40 }}>
-            <div className="mono" style={{ color: GREY, letterSpacing: 2, lineHeight: 2 }}>
-              FROM THE EDITOR<br />VOL. 01 · KUALA LUMPUR
-            </div>
-            <div>
-              <p style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(20px,2.4vw,27px)", lineHeight: 1.5, fontWeight: 600, margin: 0 }}>
-                I started this issue with a simple observation: the most interesting software
-                problems don't live in software.
-              </p>
-              <p className="body-p" style={{ marginTop: 20, fontSize: 16, lineHeight: 1.8 }}>
-                They live in paddy fields where salt creeps in unseen, in ten-person teams trying
-                to agree on what "done" means, in the gap between a working demo and a system
-                someone actually relies on. Everything in this issue — a satellite watching
-                Malaysian farmland, a nutrition backend that had to survive ten contributors,
-                a requirements package that took a semester to specify — comes from that gap.
-              </p>
-              <p className="body-p" style={{ marginTop: 14, fontSize: 16, lineHeight: 1.8 }}>
-                My rule while building all of it: working software over theoretical completeness.
-                Ship the thing, learn from the contact with reality, write down what broke.
-                This issue is the writing-down part.
-              </p>
-              <div style={{ marginTop: 30 }}>
-                <div style={{ fontFamily: "'Fraunces',serif", fontStyle: "italic", fontSize: 26 }}>Ajwad Tahrir</div>
-                <div className="mono" style={{ color: GREY, marginTop: 6 }}>EDITOR & SOLE CONTRIBUTOR · JULY 2026</div>
-              </div>
-            </div>
-            <div aria-hidden="true" style={{ borderLeft: `1px solid ${FAINT}`, paddingLeft: 24 }} className="mono">
-              <div style={{ color: GREY, lineHeight: 2.2 }}>
-                IN THIS ISSUE:<br />
-                1 SATELLITE<br />
-                50 REQUIREMENTS<br />
-                105 SURVEY RESPONSES<br />
-                10 DEVELOPERS<br />
-                0 TEMPLATES
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-      <div className="wrap"><div className="rule" /></div>
-
+      
+      
+      
       {/* THE PROFILE */}
       <section className="wrap" id="author" style={{ paddingTop: 44, paddingBottom: 10 }}>
         <Reveal>
@@ -676,6 +663,64 @@ export default function Portfolio() {
         </Reveal>
         <PageFoot no="00" />
       </section>
+     <div className="wrap"><div className="rule-thick" style={{ marginTop: 20 }} /></div>
+
+      {/* THE ARCHIVE */}
+      <section className="wrap" id="archive" style={{ paddingTop: 10, paddingBottom: 30 }}>
+        <Reveal>
+          <div className="kicker">THE LIFE ISSUE</div>
+          <div style={{ marginTop: 20 }}>
+            <ArchiveGrid onOpen={setArchiveId} />
+          </div>
+        </Reveal>
+      </section>
+      <div className="wrap"><div className="rule" /></div>
+      
+      {/* EDITOR'S LETTER — unnumbered front matter */}
+      <section className="wrap" id="editors-letter" style={{ paddingTop: 60, paddingBottom: 40 }}> 
+        <Reveal>
+          <div className="letter-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr 1fr", gap: 40 }}>
+            <div className="mono" style={{ color: GREY, letterSpacing: 2, lineHeight: 2 }}>
+              FROM THE EDITOR<br />VOL. 01 · KUALA LUMPUR
+            </div>
+            <div>
+              <p style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(20px,2.4vw,27px)", lineHeight: 1.5, fontWeight: 600, margin: 0 }}>
+                I started this issue with a simple observation: the most interesting software
+                problems don't live in software.
+              </p>
+              <p className="body-p" style={{ marginTop: 20, fontSize: 16, lineHeight: 1.8 }}>
+                They live in paddy fields where salt creeps in unseen, in ten-person teams trying
+                to agree on what "done" means, in the gap between a working demo and a system
+                someone actually relies on. Everything in this issue — a satellite watching
+                Malaysian farmland, a nutrition backend that had to survive ten contributors,
+                a requirements package that took a semester to specify — comes from that gap.
+              </p>
+              <p className="body-p" style={{ marginTop: 14, fontSize: 16, lineHeight: 1.8 }}>
+                My rule while building all of it: working software over theoretical completeness.
+                Ship the thing, learn from the contact with reality, write down what broke.
+                This issue is the writing-down part.
+              </p>
+              <div style={{ marginTop: 30 }}>
+                <div style={{ fontFamily: "'Fraunces',serif", fontStyle: "italic", fontSize: 26 }}>Ajwad Tahrir</div>
+                <div className="mono" style={{ color: GREY, marginTop: 6 }}>EDITOR & SOLE CONTRIBUTOR · JULY 2026</div>
+              </div>
+            </div>
+            <div aria-hidden="true" style={{ borderLeft: `1px solid ${FAINT}`, paddingLeft: 24 }} className="mono">
+              <div style={{ color: GREY, lineHeight: 2.2 }}>
+                IN THIS ISSUE:<br />
+                1 SATELLITE<br />
+                50 REQUIREMENTS<br />
+                105 SURVEY RESPONSES<br />
+                10 DEVELOPERS<br />
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+
+      
+      
 
       {/* FEATURES */}
       <main className="wrap" id="features" style={{ paddingTop: 26 }}>
@@ -686,8 +731,8 @@ export default function Portfolio() {
       </main>
 
       {/* FULL-PAGE QUOTE SPREAD */}
-      <QuoteSpread credit="— ON BUILDING SALTELLITE">
-        “The best alert is the one a farmer gets before the damage — not after.”
+      <QuoteSpread credit="— MASTER OOGWAY">
+        “Yesterday is history, tomorrow is a mystery, but today is a gift”
       </QuoteSpread>
 
       <SectionBreak no="02" label="ENGINEERING NOTES" />
@@ -872,6 +917,7 @@ export default function Portfolio() {
       </section>
 
       <FeatureOverlay project={activeProject} onClose={route.close} />
+      <ArchiveOverlay activeId={archiveId} onClose={() => setArchiveId(null)} />
     </div>
   );
 }

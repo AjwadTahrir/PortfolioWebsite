@@ -1,6 +1,8 @@
+import { lazy, Suspense } from "react";
 import Overlay from "../../components/ui/Overlay";
-import FieldNotesMap from "./FieldNotesMap";
 import RunnersLog from "./RunnersLog";
+
+const FieldNotesMap = lazy(() => import("./FieldNotesMap"));
 
 /* Tiles with a dedicated feature; the rest show their data `placeholder`. */
 const CONTENT_BY_ID = {
@@ -23,7 +25,13 @@ export default function ArchiveOverlay({ item, onClose }) {
             <h2 className="headline archive-overlay__title">{item.title}</h2>
             <p className="body-p archive-overlay__dek">{item.dek}</p>
           </div>
-          {Content ? <Content /> : <div className="body-p">{item.placeholder}</div>}
+          {Content ? (
+            <Suspense fallback={<div className="body-p">Loading…</div>}>
+              <Content />
+            </Suspense>
+          ) : (
+            <div className="body-p">{item.placeholder}</div>
+          )}
         </>
       )}
     </Overlay>

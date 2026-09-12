@@ -1,7 +1,8 @@
-import { useState } from "react";
-import AdminApp from "./admin/AdminApp";
+import { useState, lazy, Suspense } from "react";
 import PrintEdition from "./pages/PrintEdition";
 import WebEdition from "./pages/WebEdition";
+
+const AdminApp = lazy(() => import("./admin/AdminApp"));
 
 const IS_ADMIN_PATH = window.location.pathname.replace(import.meta.env.BASE_URL, "").startsWith("admin");
 
@@ -13,7 +14,13 @@ const IS_ADMIN_PATH = window.location.pathname.replace(import.meta.env.BASE_URL,
 export default function App() {
   const [isPrintEdition, setIsPrintEdition] = useState(false);
 
-  if (IS_ADMIN_PATH) return <AdminApp />;
+  if (IS_ADMIN_PATH) {
+    return (
+      <Suspense fallback={null}>
+        <AdminApp />
+      </Suspense>
+    );
+  }
 
   return isPrintEdition ? (
     <PrintEdition onClose={() => setIsPrintEdition(false)} />

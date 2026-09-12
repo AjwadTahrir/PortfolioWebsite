@@ -1,0 +1,6 @@
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .3, 1);
+}
+.reveal.is-visible { opacity: 1; transform: none; }

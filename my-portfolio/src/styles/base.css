@@ -1,0 +1,91 @@
+/* ---- Document defaults ------------------------------------------------
+   Inherited by all text, so they're part of the look (root size, line
+   height and the slight positive letter-spacing). */
+:root {
+  font: 18px/145% system-ui, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: #6b6375;
+  background: #fff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@media (max-width: 1024px) {
+  :root { font-size: 16px; }
+}
+@media (prefers-color-scheme: dark) {
+  :root { color: #9ca3af; background: #16171d; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+p { margin: 0; }
+h2 { line-height: 118%; letter-spacing: -0.24px; }
+#root { width: 100%; min-height: 100svh; }
+section[id], main[id] { scroll-margin-top: var(--nav-height); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---- Page shell ---- */
+.magazine {
+  position: relative;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+/* Fixed, nearly imperceptible paper noise over the whole page */
+.paper-grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 90; opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Rule between unnumbered front-matter sections */
+.front-rule { margin-top: 20px; }
+
+/* ---- Layout primitives ---- */
+.wrap { max-width: 1900px; margin: 0 auto; padding: 0 clamp(20px, 2.5vw, 40px); }
+.rule { border-top: 1px solid var(--ink); }
+.rule-thick { border-top: 3px solid var(--ink); }
+.spread-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+/* ---- Type primitives ---- */
+.mono { font-family: var(--font-mono); font-size: 12px; }
+.kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--red); }
+.headline {
+  font-family: var(--font-serif); font-weight: 900; line-height: 1.02;
+  margin: 0; color: var(--ink); transition: color .25s ease;
+}
+.headline--section { font-size: clamp(36px, 6vw, 72px); }
+.body-p { font-size: 15.5px; line-height: 1.7; margin: 0; color: var(--ink); }
+
+/* ---- Actions ---- */
+.cta {
+  display: inline-block; background: var(--red); color: #fff; padding: 12px 24px;
+  font-weight: 700; text-decoration: none; font-size: 14px;
+}
+.cta:hover { background: var(--ink); }
+.cta-ghost {
+  display: inline-block; border: 2px solid var(--paper); color: var(--paper); padding: 12px 24px;
+  font-weight: 700; text-decoration: none; font-size: 14px; text-align: center;
+}
+.cta-ghost:hover { background: var(--paper); color: var(--ink); }
+
+@media (max-width: 860px) {
+  .spread-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Motion ---- */
+@keyframes caretBlink { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+}

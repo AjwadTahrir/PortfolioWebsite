@@ -1,0 +1,11 @@
+.reports { padding-top: 40px; padding-bottom: 20px; }
+.reports__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+.report { border: 1px solid var(--ink); padding: 22px; background: var(--card); }
+.report__title { letter-spacing: 1.5px; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 12px; }
+.report__outcomes { list-style: none; margin: 0; padding: 0; }
+.report__outcome { display: flex; gap: 10px; padding: 6px 0; font-size: 14.5px; }
+.report__check { color: var(--red); font-weight: 700; }
+
+@media (max-width: 860px) {
+  .reports__grid { grid-template-columns: 1fr; }
+}

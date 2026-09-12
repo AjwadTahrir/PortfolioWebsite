@@ -1,0 +1,53 @@
+.print-edition {
+  background: #E8E4DC; min-height: 100vh; font-family: var(--font-sans);
+  color: var(--ink); padding: 30px 12px;
+}
+.print-edition .mono { font-size: 11px; }
+
+.print-edition__toolbar { max-width: 800px; margin: 0 auto 14px; display: flex; justify-content: space-between; }
+.print-edition__back,
+.print-edition__print { font-family: var(--font-mono); font-size: 12px; padding: 8px 16px; cursor: pointer; }
+.print-edition__back { border: 1px solid var(--ink); background: none; }
+.print-edition__print { border: none; background: var(--ink); color: #fff; }
+
+.print-sheet {
+  box-sizing: content-box; /* max-width is the text measure; padding sits outside it */
+  max-width: 800px; margin: 0 auto; padding: 44px 38px;
+  background: #fff; box-shadow: 0 4px 30px rgba(20, 20, 20, .15);
+}
+.print-sheet--cover { margin-bottom: 24px; padding: 0; overflow: hidden; }
+.print-sheet__cover-img { width: 100%; display: block; }
+.print-sheet__meta { display: flex; justify-content: space-between; }
+.print-sheet__rule-thick { border-top: 3px solid var(--ink); }
+.print-sheet__rule-thick--top { margin: 8px 0 4px; }
+.print-sheet__title {
+  font-family: var(--font-serif); font-weight: 900; font-size: 46px; margin: 4px 0;
+  text-align: center; letter-spacing: -1px;
+}
+.print-sheet__subtitle { text-align: center; padding-bottom: 8px; }
+.print-sheet__rule { border-top: 1px solid var(--ink); margin-bottom: 20px; }
+.print-sheet__columns { column-count: 2; column-gap: 28px; column-rule: 1px solid #DDD8CF; }
+.print-sheet__footer {
+  border-top: 3px solid var(--ink); margin-top: 12px; padding-top: 8px;
+  display: flex; justify-content: space-between;
+}
+
+.print-article { break-inside: avoid; margin-bottom: 20px; }
+.print-article__kicker { letter-spacing: 1px; color: var(--grey); }
+.print-article__name { font-family: var(--font-serif); font-weight: 900; font-size: 22px; margin: 4px 0 6px; }
+.print-article__summary { font-size: 13px; line-height: 1.55; margin: 0 0 6px; }
+.print-article__meta { color: var(--grey); }
+.print-report { padding: 6px 0; border-bottom: 1px dotted #CCC7BE; }
+.print-report__title { font-size: 12px; }
+.print-report__outcome { font-size: 12px; }
+
+@media (max-width: 640px) {
+  .print-sheet__columns { column-count: 1; }
+}
+
+@media print {
+  body:has(.print-edition) { background: #fff; }
+  .print-edition__toolbar { display: none; }
+  .print-sheet { box-shadow: none; padding: 0; }
+  .print-sheet--cover { break-after: page; margin-bottom: 0; }
+}

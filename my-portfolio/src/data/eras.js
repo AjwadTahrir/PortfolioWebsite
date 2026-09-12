@@ -1,18 +1,33 @@
+/* The Chronicles timeline, newest first. */
 export const ERAS = [
-  ["2026", "AI SYSTEMS ERA", [
-    ["SALTellite", "AI × Satellite · Sentinel-2 + ML"],
-    ["Requirements leadership", "10-person team"],
-  ]],
-  ["2025", "FULL-STACK ERA", [
-    ["First team products shipped", "Node · MongoDB"],
-    ["First ML systems", "scikit-learn"],
-    ["Flutter applications", "Mobile"],
-  ]],
-  ["2024", "FOUNDATION ERA", [
-    ["Software Engineering, Universiti Malaya", "Enrolled"],
-    ["First applications built", "Java · Python"],
-  ]],
-  ["2023", "ON-RAMP", [
-    ["Foundation studies", "PASUM"],
-  ]],
+  {
+    year: "2026",
+    era: "AI SYSTEMS ERA",
+    milestones: [
+      { name: "SALTellite", tag: "AI × Satellite · Sentinel-2 + ML" },
+      { name: "Requirements leadership", tag: "10-person team" },
+    ],
+  },
+  {
+    year: "2025",
+    era: "FULL-STACK ERA",
+    milestones: [
+      { name: "First team products shipped", tag: "Node · MongoDB" },
+      { name: "First ML systems", tag: "scikit-learn" },
+      { name: "Flutter applications", tag: "Mobile" },
+    ],
+  },
+  {
+    year: "2024",
+    era: "FOUNDATION ERA",
+    milestones: [
+      { name: "Software Engineering, Universiti Malaya", tag: "Enrolled" },
+      { name: "First applications built", tag: "Java · Python" },
+    ],
+  },
+  {
+    year: "2023",
+    era: "ON-RAMP",
+    milestones: [{ name: "Foundation studies", tag: "PASUM" }],
+  },
 ];

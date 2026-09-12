@@ -1,0 +1,24 @@
+/* ---- Reading progress ---- */
+.progress-rule { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 100; }
+.progress-rule__bar {
+  height: 100%; background: var(--ink);
+  transform-origin: left; transition: transform .1s linear;
+}
+
+/* ---- Page folio ---- */
+.page-foot {
+  display: flex; justify-content: space-between;
+  color: var(--faint); padding-top: 40px; letter-spacing: 1px;
+}
+
+/* ---- Page-turn break ---- */
+.section-break { padding-top: 30px; padding-bottom: 10px; }
+.section-break__row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 18px 0 6px; overflow: hidden;
+}
+.section-break__no {
+  font-family: var(--font-serif); font-weight: 900; font-size: clamp(70px, 11vw, 170px);
+  line-height: 0.85; color: var(--ink); opacity: 0.08; user-select: none;
+}
+.section-break__label { letter-spacing: 4px; color: var(--grey); text-align: right; }

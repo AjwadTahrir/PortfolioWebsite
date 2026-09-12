@@ -1,0 +1,19 @@
+.editors-letter { padding-top: 60px; padding-bottom: 40px; }
+.editors-letter__grid { display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 40px; }
+.editors-letter__dateline { color: var(--grey); letter-spacing: 2px; line-height: 2; }
+.editors-letter__opening {
+  font-family: var(--font-serif); font-size: clamp(20px, 2.4vw, 27px);
+  line-height: 1.5; font-weight: 600; margin: 0;
+}
+.editors-letter__body { margin-top: 14px; font-size: 16px; line-height: 1.8; }
+.editors-letter__body--first { margin-top: 20px; }
+.editors-letter__signoff { margin-top: 30px; }
+.editors-letter__signature { font-family: var(--font-serif); font-style: italic; font-size: 26px; }
+.editors-letter__role { color: var(--grey); margin-top: 6px; }
+.editors-letter__tally { border-left: 1px solid var(--faint); padding-left: 24px; }
+.editors-letter__tally-list { color: var(--grey); line-height: 2.2; }
+
+@media (max-width: 860px) {
+  .editors-letter__grid { grid-template-columns: 1fr; gap: 24px; }
+  .editors-letter__tally { border-left: none; padding-left: 0; }
+}

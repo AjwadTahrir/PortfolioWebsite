@@ -1,0 +1,30 @@
+.profile { padding-top: 44px; padding-bottom: 10px; }
+.profile__grid {
+  display: grid; grid-template-columns: 260px 1fr 1fr; gap: 40px;
+  margin-top: 16px; align-items: start;
+}
+.profile__figure { margin: 0; }
+.profile__portrait { border: 1px solid var(--ink); aspect-ratio: 3 / 4; overflow: hidden; background: #E7E3DA; }
+.profile__portrait-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.profile__portrait-fallback {
+  display: flex; height: 100%; align-items: center; justify-content: center;
+  padding: 14px; text-align: center;
+}
+.profile__caption { color: var(--grey); padding-top: 8px; }
+
+.profile__name { font-size: clamp(32px, 5vw, 60px); }
+.profile__lede { margin-top: 14px; font-size: 17px; line-height: 1.75; }
+.profile__philosophy { margin-top: 12px; font-size: 15.5px; color: var(--grey); }
+
+.profile__facts { margin-top: 6px; }
+.profile__fact { padding: 10px 0; border-bottom: 1px solid var(--ink); }
+.profile__fact:first-child { border-top: 3px solid var(--ink); }
+
+@media (max-width: 860px) {
+  .profile__grid { grid-template-columns: 200px 1fr; }
+  .profile__facts { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .profile__grid { grid-template-columns: 1fr; }
+  .profile__figure { max-width: 220px; }
+}

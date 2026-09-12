@@ -1,0 +1,7 @@
+.typewriter__caret {
+  display: inline-block;
+  width: 0.06em;
+  border-right: 3px solid var(--ink);
+  margin-left: 3px;
+  animation: caretBlink 1s steps(1) infinite;
+}

@@ -1,0 +1,67 @@
+/* ---- Section ---- */
+.archive { padding-top: 10px; padding-bottom: 30px; }
+.archive__grid-wrap { margin-top: 20px; }
+
+/* ---- Bento grid: placement keyed by tile id ---- */
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, minmax(130px, auto));
+  gap: 18px;
+  grid-template-areas:
+    "running running university university"
+    "running running travel photography"
+    "life life life life";
+}
+.archive-tile--running { grid-area: running; }
+.archive-tile--university { grid-area: university; }
+.archive-tile--travel { grid-area: travel; }
+.archive-tile--photography { grid-area: photography; }
+.archive-tile--life { grid-area: life; min-height: 110px; }
+
+/* ---- Tiles (extends .tile) ---- */
+.archive-tile { width: 100%; height: 100%; }
+.archive-tile .tile__body { height: 100%; justify-content: flex-end; }
+.archive-tile .tile__name { font-size: clamp(20px, 2.4vw, 34px); }
+
+@media (max-width: 720px) {
+  .archive-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "travel" "university" "running" "photography" "life";
+  }
+}
+
+/* ---- Overlay content ---- */
+.archive-overlay__title { font-size: clamp(30px, 4.5vw, 56px); }
+.archive-overlay__dek { margin-top: 10px; font-size: 16px; }
+.archive-panel { gap: 40px; align-items: start; }
+.archive-card { border: 1px solid var(--ink); background: var(--card); }
+
+/* Field notes */
+.field-notes__map { border: 1px solid var(--ink); background: var(--card); overflow: hidden; }
+.field-notes__card { padding: 24px 26px; min-height: 180px; }
+.field-notes__year { color: var(--red); letter-spacing: 2px; }
+.field-notes__place { font-family: var(--font-serif); font-weight: 900; font-size: clamp(24px, 3vw, 34px); margin: 8px 0 12px; }
+.field-notes__days { color: var(--grey); margin-bottom: 10px; }
+.field-notes__note { font-size: 15px; line-height: 1.7; }
+.field-notes__places { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.field-notes__place-btn {
+  border: 1px solid var(--ink); color: var(--ink); background: none; padding: 6px 10px;
+  cursor: pointer; font-size: 11px; letter-spacing: 0.5px;
+}
+.field-notes__place-btn.is-selected { border-color: var(--red); color: var(--red); }
+
+/* Runner's log */
+.runners-log__card { padding: 24px 26px; }
+.runners-log__heading { letter-spacing: 2px; color: var(--grey); margin-bottom: 14px; }
+.runners-log__heading--spaced { margin: 22px 0 8px; }
+.runners-log__pb { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dotted var(--faint); }
+.runners-log__distance { font-family: var(--font-serif); font-weight: 700; font-size: 18px; }
+.runners-log__time { color: var(--red); }
+.runners-log__track { height: 10px; border: 1px solid var(--ink); background: var(--well); }
+.runners-log__fill { height: 100%; background: var(--ink); }
+.runners-log__milestones { list-style: none; margin: 0; padding: 0; }
+.runners-log__milestone { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; }
+.runners-log__index { color: var(--faint); width: 20px; }
+.runners-log__label { font-weight: 700; font-size: 15.5px; }
+.runners-log__arrow { color: var(--faint); }

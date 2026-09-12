@@ -1,0 +1,22 @@
+.blueprint { padding-top: 50px; padding-bottom: 40px; }
+.blueprint__grid { margin-top: 44px; align-items: center; gap: 60px; }
+.blueprint__intro { font-size: 17px; line-height: 1.8; max-width: 520px; }
+.blueprint__aside { font-size: 15.5px; line-height: 1.75; color: var(--grey); margin-top: 18px; max-width: 520px; }
+
+.blueprint__slices { margin-top: 26px; }
+.blueprint__slice {
+  display: flex; justify-content: space-between; gap: 14px; padding: 8px 0;
+  border-bottom: 1px dotted var(--faint); max-width: 520px;
+}
+.blueprint__slice-name { font-weight: 700; font-size: 14.5px; }
+.blueprint__slice-path { color: var(--grey); }
+
+.blueprint__layer {
+  border: 1px solid var(--ink); background: var(--paper); padding: 22px 26px;
+  display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+}
+.blueprint__layer + .blueprint__layer { margin-top: -1px; } /* collapse shared borders */
+.blueprint__layer:nth-child(even) { background: var(--card); }
+.blueprint__layer-name { letter-spacing: 2px; color: var(--grey); }
+.blueprint__layer:last-child .blueprint__layer-name { color: var(--red); } /* the intelligence layer */
+.blueprint__layer-tech { font-family: var(--font-serif); font-weight: 600; font-size: clamp(16px, 1.6vw, 22px); }

@@ -1,0 +1,10 @@
+.quote-spread { padding: 16vh 0; text-align: center; }
+.quote-spread__quote {
+  font-family: var(--font-serif); font-weight: 600; font-size: clamp(28px, 4.5vw, 58px);
+  line-height: 1.25; margin: 0 auto; max-width: 900px; color: var(--ink);
+}
+.quote-spread__credit { color: var(--grey); margin-top: 28px; letter-spacing: 3px; }
+
+@media (max-width: 720px) {
+  .quote-spread { padding: 9vh 0; }
+}

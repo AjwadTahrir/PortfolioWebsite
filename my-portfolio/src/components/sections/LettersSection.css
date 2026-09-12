@@ -1,0 +1,23 @@
+.letters { background: var(--ink); color: var(--paper); }
+.letters__body { padding-top: 70px; padding-bottom: 40px; text-align: center; }
+.letters__name {
+  font-family: var(--font-serif); font-weight: 900; font-size: clamp(38px, 7vw, 80px);
+  margin: 14px 0 6px; color: var(--paper); letter-spacing: -1px;
+}
+.letters__role { color: var(--muted-on-ink); letter-spacing: 2px; }
+.letters__divider { border-top: 1px solid var(--rule-on-ink); max-width: 480px; margin: 28px auto; }
+.letters__availability { color: var(--muted-on-ink); margin-bottom: 20px; }
+.letters__links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.letters__end { margin-top: 90px; padding-top: 60px; border-top: 1px solid var(--rule-on-ink); }
+.letters__end-title {
+  font-family: var(--font-serif); font-weight: 900; font-size: clamp(44px, 8vw, 96px);
+  color: var(--paper); letter-spacing: -1px; line-height: 1;
+}
+.letters__end-note { color: var(--muted-on-ink); margin-top: 20px; letter-spacing: 3px; line-height: 2.2; }
+
+.letters__colophon {
+  padding-top: 20px; padding-bottom: 24px; color: #7D7870;
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+  border-top: 1px solid var(--rule-on-ink);
+}

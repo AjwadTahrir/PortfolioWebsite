@@ -1,0 +1,4 @@
+.figure { margin: 0; display: flex; flex-direction: column; }
+.figure__frame { border: 1px solid var(--ink); flex: 1; }
+.figure__caption { color: var(--grey); padding: 8px 0; border-bottom: 1px solid var(--ink); }
+.figure__no { color: var(--ink); font-weight: 700; }

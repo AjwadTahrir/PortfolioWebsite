@@ -1,0 +1,14 @@
+.screenshot { width: 100%; height: auto; display: block; }
+
+.pipeline {
+  border: 1px solid var(--ink); border-bottom: none; padding: 18px 16px;
+  background: var(--card); height: 100%; min-height: 240px;
+}
+.pipeline__title { color: var(--grey); letter-spacing: 2px; margin-bottom: 12px; }
+.pipeline__step { text-align: center; }
+.pipeline__box {
+  border: 1px solid var(--ink); padding: 6px 10px; font-family: var(--font-mono); font-size: 10.5px;
+  background: #fff; color: var(--ink);
+}
+.pipeline__step:last-child .pipeline__box { background: var(--ink); color: #fff; }
+.pipeline__arrow { color: var(--grey); font-size: 11px; line-height: 14px; }

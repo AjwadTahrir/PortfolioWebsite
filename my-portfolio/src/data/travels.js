@@ -1,5 +1,6 @@
+/* Field Notes map pins. `isHome` pins render slightly larger. */
 export const TRAVELS = [
-  { id: "kl", label: "KUALA LUMPUR", lat: 3.139, lon: 101.6869, year: "—", days: null, note: "Home base" },
+  { id: "kl", isHome: true, label: "KUALA LUMPUR", lat: 3.139, lon: 101.6869, year: "—", days: null, note: "Home base" },
   { id: "singapore", label: "SINGAPORE", lat: 1.3521, lon: 103.8198, year: "TODO", days: null, note: "TODO" },
   { id: "bangkok", label: "BANGKOK", lat: 13.7563, lon: 100.5018, year: "TODO", days: null, note: "TODO" },
   { id: "padang", label: "PADANG", lat: -0.9471, lon: 100.4172, year: "TODO", days: null, note: "TODO" },

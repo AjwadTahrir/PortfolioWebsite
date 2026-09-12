@@ -1,0 +1,26 @@
+/* Design tokens. constants/colors.js mirrors the palette for SVG/JS use.
+
+   Breakpoints (CSS can't read custom properties in media queries):
+     1024px  root font size      900px  nav brand, notes grid
+     860px   two-column spreads  720px  mobile layout
+     640px   tile grids */
+:root {
+  /* palette */
+  --ink: #141414;
+  --paper: #F7F5F0;
+  --red: #C8371E;
+  --grey: #6E6A63;
+  --faint: #B9B4AA;
+  --card: #FDFCFA;          /* raised surfaces: tiles, dossiers, report cards */
+  --well: #EFEBE3;          /* recessed fills: progress tracks, map land */
+  --muted-on-ink: #9B968D;  /* secondary text on the dark closing page */
+  --rule-on-ink: #3A3A42;   /* hairlines on the dark closing page */
+
+  /* type */
+  --font-serif: 'Fraunces', serif;
+  --font-sans: 'Archivo', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  /* layout */
+  --nav-height: 56px;       /* sticky navbar; anchors scroll past it */
+}

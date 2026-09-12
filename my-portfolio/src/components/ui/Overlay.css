@@ -1,0 +1,36 @@
+/* Rendered in a portal on <body>, so it restates the page font. */
+.overlay {
+  position: fixed; inset: 0; z-index: 200;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  font-family: var(--font-sans);
+}
+.overlay__backdrop {
+  position: fixed; inset: 0; background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity .3s ease;
+}
+.overlay__backdrop.is-shown { opacity: 1; }
+.overlay__panel {
+  position: relative; z-index: 1; width: min(1080px, 94vw);
+  margin: 5vh auto 8vh; background: var(--paper); color: var(--ink); border: 1px solid var(--ink);
+  box-shadow: 0 30px 90px rgba(20, 20, 20, .35); padding: clamp(20px, 3vw, 40px);
+  opacity: 0; transform: translateY(34px) scale(.985);
+  transition: opacity .32s ease, transform .32s cubic-bezier(.2, .7, .3, 1);
+}
+.overlay__panel:focus { outline: none; } /* focused programmatically, not by the user */
+.overlay__panel.is-shown { opacity: 1; transform: none; }
+
+/* Pieces for overlay content */
+.overlay__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.overlay__bar-label { letter-spacing: 2px; }
+.overlay__head { margin-bottom: 22px; }
+.overlay__close {
+  background: none; border: 1px solid var(--ink); color: var(--ink);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+  padding: 6px 12px; cursor: pointer;
+}
+.overlay__close:hover { background: var(--ink); color: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay__panel { transform: none; }
+}

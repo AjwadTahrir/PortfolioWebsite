@@ -1,0 +1,14 @@
+.stats { padding-top: 50px; padding-bottom: 10px; }
+.stats__grid {
+  display: grid; grid-template-columns: repeat(var(--stat-count), 1fr);
+  border: 1px solid var(--ink); margin-top: 24px;
+}
+.stat { padding: 26px 22px; border-left: 1px solid var(--ink); }
+.stat:first-child { border-left: none; }
+.stat__value { font-family: var(--font-serif); font-weight: 900; font-size: clamp(28px, 3.5vw, 44px); color: var(--ink); }
+.stat__label { color: var(--grey); margin-top: 8px; line-height: 1.5; text-transform: uppercase; }
+
+@media (max-width: 860px) {
+  .stats__grid { grid-template-columns: 1fr 1fr; }
+  .stat { border-left: none; border-top: 1px solid var(--ink); }
+}

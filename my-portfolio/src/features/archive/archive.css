@@ -62,6 +62,38 @@
 .runners-log__fill { height: 100%; background: var(--ink); }
 .runners-log__milestones { list-style: none; margin: 0; padding: 0; }
 .runners-log__milestone { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; }
-.runners-log__index { color: var(--faint); width: 20px; }
+.runners-log__milestones {
+  --index-width: 20px;
+  --node-size: 9px;
+  --column-gap: 14px;
+}
+.runners-log__milestone {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--index-width) var(--node-size) 1fr;
+  column-gap: var(--column-gap);
+  align-items: center;
+  padding: 10px 0;
+}
+/* Connector: runs from this dot's centre to the next one (rows are equal height). */
+.runners-log__milestone::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--index-width) + var(--column-gap) + var(--node-size) / 2 - 0.5px);
+  top: 50%;
+  height: 100%;
+  width: 1px;
+  background: var(--ink);
+}
+.runners-log__milestone:last-child::before { display: none; }
+
+.runners-log__node {
+  position: relative; z-index: 1; /* sits on top of the line */
+  width: var(--node-size); height: var(--node-size);
+  border-radius: 50%;
+  background: var(--ink);
+}
+.runners-log__milestone:last-child .runners-log__node { background: var(--red); } /* latest */
+
+.runners-log__index { color: var(--faint); }
 .runners-log__label { font-weight: 700; font-size: 15.5px; }
-.runners-log__arrow { color: var(--faint); }

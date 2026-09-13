@@ -14,7 +14,14 @@ export default function RunnersLog() {
             <span className="runners-log__time mono">{time}</span>
           </div>
         ))}
-        <div className="runners-log__heading runners-log__heading--spaced mono">TOTAL DISTANCE</div>
+          <div className="runners-log__distance-head">
+            <span className="runners-log__heading mono">TOTAL DISTANCE </span>
+            <span className="runners-log__km mono">
+              <span className="runners-log__km-done">{TOTAL_DISTANCE_KM.toLocaleString()} KM</span>
+              {" / "}
+              {DISTANCE_GOAL_KM.toLocaleString()} KM
+            </span>
+        </div>
         <div
           className="runners-log__track"
           role="progressbar"
@@ -31,8 +38,8 @@ export default function RunnersLog() {
         {RUN_MILESTONES.map((milestone, i) => (
           <li key={milestone} className="runners-log__milestone">
             <span className="runners-log__index mono">{padNumber(i + 1)}</span>
+            <span className="runners-log__node" aria-hidden="true" />
             <span className="runners-log__label">{milestone}</span>
-            {i < RUN_MILESTONES.length - 1 && <span className="runners-log__arrow" aria-hidden="true">→</span>}
           </li>
         ))}
       </ol>

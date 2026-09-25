@@ -1,14 +1,28 @@
-/* Running-header navigation. `id` must match a section's DOM id;
-   `no` is the magazine page number shown beside the label. */
-export const NAV_ITEMS = [
-  { id: "author", label: "Profile", no: "00" },
-  { id: "features", label: "Features", no: "01" },
-  { id: "notes", label: "Notes", no: "02" },
-  { id: "log", label: "Chronicles", no: "03" },
-  { id: "blueprint", label: "Blueprint", no: "04" },
-  { id: "reports", label: "Reports", no: "05" },
-  { id: "index", label: "Stack", no: "06" },
-  { id: "letters", label: "Letters", no: "07" },
-];
+/* The issue in reading order. `id` must match a section's DOM id; the
+   page number is the position in this list, so a page added here is
+   numbered everywhere (folio, running head, Contents) without touching
+   anything else. */
+export const PAGES = [
+  { id: "cover", title: "The cover", blurb: "Volume 01, Kuala Lumpur" },
+  { id: "author", title: "The profile", blurb: "Who is behind this issue, and what they do off-screen" },
+  { id: "editors-letter", title: "From the editor", blurb: "Why these stories" },
+  { id: "features", title: "The work", blurb: "Things I have built, one line each" },
+  { id: "log", title: "The chronicles", blurb: "Four years, newest first" },
+  { id: "blueprint", title: "The blueprint", blurb: "How the stack layers" },
+  { id: "reports", title: "Field reports", blurb: "Outcomes, verified" },
+  { id: "index", title: "The stack index", blurb: "Every tool, and where it appears" },
+  { id: "letters", title: "Letters to the editor", blurb: "Get in touch" },
+].map((page, i) => ({ ...page, no: String(i + 1).padStart(2, "0") }));
 
-export const SECTION_IDS = NAV_ITEMS.map((item) => item.id);
+/* Sections that share another page's number: the archive follows the profile
+   and is part of that page. */
+const SAME_PAGE_AS = { archive: "author" };
+
+/* Every id the folio and running head should watch for. */
+export const PAGE_IDS = [...PAGES.map((page) => page.id), ...Object.keys(SAME_PAGE_AS)];
+export const PAGE_COUNT = PAGES.length;
+
+export function pageOf(id) {
+  const pageId = SAME_PAGE_AS[id] ?? id;
+  return PAGES.find((page) => page.id === pageId);
+}

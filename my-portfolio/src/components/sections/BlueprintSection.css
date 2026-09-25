@@ -1,22 +1,24 @@
-.blueprint { padding-top: 50px; padding-bottom: 40px; }
-.blueprint__grid { margin-top: 44px; align-items: center; gap: 60px; }
-.blueprint__intro { font-size: 17px; line-height: 1.8; max-width: 520px; }
-.blueprint__aside { font-size: 15.5px; line-height: 1.75; color: var(--grey); margin-top: 18px; max-width: 520px; }
+.blueprint__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(32px, 5vw, 96px); align-items: center; }
+.blueprint__intro { font-size: var(--t-lead); line-height: 1.4; max-width: 30ch; }
+.blueprint__aside { margin-top: 20px; color: var(--grey); }
 
-.blueprint__slices { margin-top: 26px; }
-.blueprint__slice {
-  display: flex; justify-content: space-between; gap: 14px; padding: 8px 0;
-  border-bottom: 1px dotted var(--faint); max-width: 520px;
-}
-.blueprint__slice-name { font-weight: 700; font-size: 14.5px; }
-.blueprint__slice-path { color: var(--grey); }
+.blueprint__slices { margin: 32px 0 0; }
+.blueprint__slice { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--ink); max-width: 560px; }
+.blueprint__slice dt { font-weight: 800; }
+.blueprint__slice dd { margin: 0; font-style: italic; color: var(--grey); text-align: right; }
 
+/* The tower: four colour bands, each stepping in as the stack deepens. */
+.blueprint__tower { display: flex; flex-direction: column; gap: 6px; }
 .blueprint__layer {
-  border: 1px solid var(--ink); background: var(--paper); padding: 22px 26px;
-  display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+  display: flex; flex-direction: column; gap: 4px; padding: clamp(22px, 4svh, 40px) clamp(20px, 2.4vw, 36px);
+  background: var(--well); color: var(--ink);
 }
-.blueprint__layer + .blueprint__layer { margin-top: -1px; } /* collapse shared borders */
-.blueprint__layer:nth-child(even) { background: var(--card); }
-.blueprint__layer-name { letter-spacing: 2px; color: var(--grey); }
-.blueprint__layer:last-child .blueprint__layer-name { color: var(--red); } /* the intelligence layer */
-.blueprint__layer-tech { font-family: var(--font-serif); font-weight: 600; font-size: clamp(16px, 1.6vw, 22px); }
+.blueprint__layer:nth-child(2) { background: #CFC9BA; }
+.blueprint__layer:nth-child(3) { background: var(--ink); color: var(--paper); }
+.blueprint__layer:nth-child(4) { background: var(--red); color: var(--paper); }
+.blueprint__layer-name { font-style: italic; font-size: 18px; opacity: .8; }
+.blueprint__layer-tech { font-weight: 900; font-size: clamp(17px, 2vw, 32px); line-height: 1; letter-spacing: -0.02em; }
+
+@media (max-width: 900px) {
+  .blueprint__grid { grid-template-columns: 1fr; }
+}

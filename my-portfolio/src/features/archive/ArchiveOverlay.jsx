@@ -10,11 +10,11 @@ const CONTENT_BY_ID = {
   running: RunnersLog,
 };
 
-export default function ArchiveOverlay({ item, onClose }) {
+export default function ArchiveOverlay({ item, onClose, morph }) {
   const Content = CONTENT_BY_ID[item.id];
 
   return (
-    <Overlay label={item.title} onClose={onClose}>
+    <Overlay label={item.title} onClose={onClose} morph={morph}>
       {(requestClose) => (
         <>
           <div className="overlay__bar">

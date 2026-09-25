@@ -17,6 +17,7 @@
   opacity: 0; transform: translateY(34px) scale(.985);
   transition: opacity .32s ease, transform .32s cubic-bezier(.2, .7, .3, 1);
 }
+.overlay__panel--morph { view-transition-name: archive-morph; transition: none; }
 .overlay__panel:focus { outline: none; } /* focused programmatically, not by the user */
 .overlay__panel.is-shown { opacity: 1; transform: none; }
 

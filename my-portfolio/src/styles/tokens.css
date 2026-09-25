@@ -24,3 +24,32 @@
   /* layout */
   --nav-height: 56px;       /* sticky navbar; anchors scroll past it */
 }
+
+/* The web edition's own palette and scale. Scoped to body.web (set by
+   WebEdition) so the Print Edition and /admin keep the values above.
+   constants/colors.js mirrors the colours for SVG/JS use. */
+body.web {
+  --paper: #F1EDE4;         /* newsprint */
+  --ink: #171613;           /* press black */
+  --well: #E2DDD0;          /* coated stock */
+  --card: #F1EDE4;
+  --grey: #5E5A52;
+  --faint: #A8A296;
+
+  --font-sans: 'Fraunces', serif; /* one family for everything editorial */
+
+  /* type scale, about 12:1 from body to cover */
+  --t-body: 17px;
+  --t-lead: clamp(19px, 1.5vw, 24px);
+  --t-h3: clamp(24px, 2.2vw, 34px);
+  --t-h2: clamp(40px, 6.6vw, 108px);
+
+  /* page furniture */
+  --margin-l: 0px;                      /* no side strip; kept as a token so pages can still offset from it */
+  --gutter: clamp(20px, 3.4vw, 64px);
+  --head-height: 52px;                  /* running head */
+  --nav-height: 52px;
+}
+@media (max-width: 900px) {
+  body.web { --margin-l: 0px; --gutter: 20px; --t-body: 16px; }
+}

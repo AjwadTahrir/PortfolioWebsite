@@ -1,38 +1,86 @@
-/* ---- Section ---- */
-.archive { padding-top: 10px; padding-bottom: 30px; }
-.archive__grid-wrap { margin-top: 20px; }
-
-/* ---- Bento grid: placement keyed by tile id ---- */
-.archive-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(3, minmax(130px, auto));
-  gap: 18px;
-  grid-template-areas:
-    "running running university university"
-    "running running travel photography"
-    "life life life life";
+/* ---- Tile <-> overlay morph (View Transitions; see ArchiveSection.jsx) ---- */
+::view-transition-group(archive-morph) {
+  animation-duration: .38s; animation-timing-function: cubic-bezier(.2, .7, .3, 1);
 }
-.archive-tile--running { grid-area: running; }
-.archive-tile--university { grid-area: university; }
-.archive-tile--travel { grid-area: travel; }
-.archive-tile--photography { grid-area: photography; }
-.archive-tile--life { grid-area: life; min-height: 110px; }
+::view-transition-old(archive-morph), ::view-transition-new(archive-morph) {
+  height: 100%; object-fit: cover; mix-blend-mode: normal;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) { animation-duration: 0s; }
+}
 
-/* ---- Tiles (extends .tile) ---- */
-.archive-tile { width: 100%; height: 100%; }
-.archive-tile .tile__body { height: 100%; justify-content: flex-end; }
-.archive-tile .tile__name { font-size: clamp(20px, 2.4vw, 34px); }
+/* ---- The back-of-book page: press black, full bleed ---- */
+.archive {
+  background: var(--ink); color: var(--paper); min-height: 100svh;
+  padding: calc(var(--head-height) + 7svh) var(--gutter) 8svh calc(var(--margin-l) + var(--gutter));
+  display: flex; flex-direction: column; gap: 5svh;
+}
+.archive__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+.archive__title { margin: 0; color: var(--paper); font-size: var(--t-h2); }
+.archive__deck { margin: 0; font-style: italic; font-size: var(--t-lead); max-width: 30ch; color: rgba(241, 237, 228, .75); text-align: right; }
 
-@media (max-width: 720px) {
-  .archive-grid {
-    grid-template-columns: 1fr;
-    grid-template-areas: "travel" "university" "running" "photography" "life";
-  }
+/* Two rows of fixed proportions. Hover never changes layout: the tile lifts
+   (transform) and its siblings dim (opacity), so nothing reflows or jitters. */
+.archive-grid { flex: 1; display: flex; flex-direction: column; gap: 14px; min-height: 60svh; }
+.archive-row { display: flex; gap: 14px; }
+.archive-row:nth-child(1) { flex: 1.35; }
+.archive-row:nth-child(2) { flex: 1; }
+
+.archive-tile {
+  position: relative; overflow: hidden; flex: 1 1 0; min-width: 0; text-align: left; cursor: pointer;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;
+  padding: clamp(18px, 2.2vw, 34px); border: 2px solid var(--paper); font: inherit;
+  background: var(--paper); color: var(--ink);
+  transition: transform .25s cubic-bezier(.2, .7, .3, 1), box-shadow .25s cubic-bezier(.2, .7, .3, 1), opacity .25s ease;
+}
+.archive-tile:hover, .archive-tile:focus-visible {
+  transform: translate(-4px, -4px); box-shadow: 8px 8px 0 var(--red); z-index: 1;
+}
+.archive-tile--running:hover, .archive-tile--running:focus-visible { box-shadow: 8px 8px 0 var(--paper); }
+/* Everything else steps back. */
+.archive-grid:has(.archive-tile:hover) .archive-tile:not(:hover),
+.archive-grid:has(.archive-tile:focus-visible) .archive-tile:not(:focus-visible) { opacity: .5; }
+.archive-tile:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+
+/* Each tile is its own colour, so the page reads as five different things. */
+.archive-tile--running { flex-grow: 2; background: var(--red); color: var(--paper); border-color: var(--red); }
+.archive-tile--university { background: var(--paper); }
+.archive-tile--travel { background: var(--well); border-color: var(--well); }
+.archive-tile--photography { background: transparent; color: var(--paper); }
+.archive-tile--life { flex-grow: 2; background: var(--paper); color: var(--red); border-color: var(--paper); }
+
+/* Typographic art: the initial, enormous, cropped by the tile edge. */
+.archive-tile__glyph {
+  position: absolute; right: -0.06em; top: -0.16em; font-weight: 900; line-height: 1; letter-spacing: -0.04em;
+  font-size: clamp(144px, 23vw, 374px); opacity: .16; pointer-events: none; user-select: none;
+  font-variation-settings: "opsz" 144;
+  transition: transform .6s cubic-bezier(.2, .7, .3, 1);
+}
+.archive-tile:hover .archive-tile__glyph, .archive-tile:focus-visible .archive-tile__glyph { transform: translate(-3%, 5%) rotate(-4deg); }
+
+.archive-tile__kicker { position: relative; font-style: italic; font-size: 18px; opacity: .8; text-transform: lowercase; }
+.archive-tile__kicker::first-letter { text-transform: uppercase; }
+.archive-tile__title {
+  position: relative; font-weight: 900; line-height: .92; letter-spacing: -0.025em;
+  font-size: clamp(23px, 3.3vw, 60px); font-variation-settings: "opsz" 144;
+}
+.archive-tile__dek { position: relative; font-size: 17px; line-height: 1.4; max-width: 40ch; opacity: .85; }
+
+@media (max-width: 900px) {
+  .archive { padding: 72px var(--gutter) 64px; }
+  .archive__deck { text-align: left; }
+  .archive-grid { min-height: 0; }
+  .archive-row { flex-direction: column; flex: none !important; }
+  .archive-tile { flex: none !important; min-height: 190px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .archive-tile, .archive-tile__glyph { transition: none; }
+  .archive-tile:hover, .archive-tile:focus-visible { transform: none; box-shadow: none; }
+  .archive-tile:hover .archive-tile__glyph { transform: none; }
 }
 
 /* ---- Overlay content ---- */
-.archive-overlay__title { font-size: clamp(30px, 4.5vw, 56px); }
+.archive-overlay__title { font-size: clamp(32px, 5vw, 79px); }
 .archive-overlay__dek { margin-top: 10px; font-size: 16px; }
 .archive-panel { gap: 40px; align-items: start; }
 .archive-card { border: 1px solid var(--ink); background: var(--card); }

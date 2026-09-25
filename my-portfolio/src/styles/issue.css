@@ -1,0 +1,51 @@
+/* Web-edition globals: page furniture, type scale and primitives. Everything
+   is scoped under body.web (set by WebEdition), so the Print Edition and
+   /admin never see it. Loaded after base.css, so these win on equal
+   specificity. */
+
+body.web { background: var(--paper); }
+html:has(body.web) { scroll-padding-top: var(--head-height); }
+
+.web .magazine {
+  --cover-p: 0; /* 0 at the top of the cover, 1 once it has played out (useCoverProgress) */
+  font-family: var(--font-serif); font-size: var(--t-body); line-height: 1.6;
+  font-optical-sizing: auto; letter-spacing: 0;
+}
+
+/* Every page starts to the right of the binding strip. */
+.web .wrap {
+  max-width: none; margin: 0;
+  padding-left: calc(var(--margin-l) + var(--gutter)); padding-right: var(--gutter);
+}
+.web .rule, .web .rule-thick { border-color: var(--ink); }
+
+/* ---- Type ---- */
+.web .headline { font-weight: 900; line-height: 0.92; letter-spacing: -0.015em; word-spacing: 0.08em; font-variation-settings: "opsz" 144; }
+.web .headline--section { font-size: var(--t-h2); }
+.web .body-p { font-size: var(--t-body); line-height: 1.65; max-width: 62ch; }
+.web .mono { font-size: 12px; letter-spacing: 0.02em; }
+/* Story overlay furniture (rendered in a portal, hence scoped by body.web): italic serif, sentence case. */
+.web .kicker { font-family: var(--font-serif); font-style: italic; font-size: 20px; letter-spacing: 0; text-transform: lowercase; }
+.web .kicker::first-letter { text-transform: uppercase; }
+.web .figure__caption { font-family: var(--font-serif); font-style: italic; font-size: 15px; line-height: 1.4; letter-spacing: 0; color: var(--grey); }
+.web .figure__no { font-style: normal; font-weight: 700; margin-right: 6px; }
+.web .article__section-h { font-family: var(--font-serif); font-style: italic; font-size: 22px; letter-spacing: 0; text-transform: lowercase; color: var(--grey); }
+.web .article__section-h::first-letter { text-transform: uppercase; }
+.web .article__section-h--accent { color: var(--red); }
+.web .story__title { font-size: clamp(35px, 5.8vw, 92px); letter-spacing: -0.02em; }
+
+/* Actions */
+.web .cta, .web .cta-ghost { font-family: var(--font-serif); font-size: 17px; font-weight: 600; }
+
+/* ---- Page snap: each page start is a soft snap point ---- */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(body.web) { scroll-snap-type: y proximity; }
+  .web .snap-page { scroll-snap-align: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(body.web) { scroll-behavior: auto; }
+  .web .magazine { --cover-p: 1; }
+}
+
+/* Keyboard focus, everywhere */
+.web :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }

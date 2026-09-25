@@ -1,19 +1,30 @@
-.editors-letter { padding-top: 60px; padding-bottom: 40px; }
-.editors-letter__grid { display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 40px; }
-.editors-letter__dateline { color: var(--grey); letter-spacing: 2px; line-height: 2; }
-.editors-letter__opening {
-  font-family: var(--font-serif); font-size: clamp(20px, 2.4vw, 27px);
-  line-height: 1.5; font-weight: 600; margin: 0;
+.editors-letter {
+  min-height: 100svh; background: var(--well); display: flex; align-items: center;
+  padding: calc(var(--head-height) + 6svh) var(--gutter) 8svh calc(var(--margin-l) + var(--gutter));
 }
-.editors-letter__body { margin-top: 14px; font-size: 16px; line-height: 1.8; }
-.editors-letter__body--first { margin-top: 20px; }
-.editors-letter__signoff { margin-top: 30px; }
-.editors-letter__signature { font-family: var(--font-serif); font-style: italic; font-size: 26px; }
-.editors-letter__role { color: var(--grey); margin-top: 6px; }
-.editors-letter__tally { border-left: 1px solid var(--faint); padding-left: 24px; }
-.editors-letter__tally-list { color: var(--grey); line-height: 2.2; }
+.editors-letter__grid {
+  width: 100%; display: grid; grid-template-columns: minmax(0, .5fr) minmax(0, 1.5fr) minmax(0, .7fr);
+  gap: clamp(28px, 4.5vw, 84px); align-items: start;
+}
+.editors-letter__dateline { font-style: italic; font-size: 19px; color: var(--grey); line-height: 1.6; border-top: 4px solid var(--ink); padding-top: 14px; }
+.editors-letter__dateline p { margin: 0; }
+.editors-letter__dateline p:first-child { color: var(--red); font-weight: 600; }
 
-@media (max-width: 860px) {
-  .editors-letter__grid { grid-template-columns: 1fr; gap: 24px; }
-  .editors-letter__tally { border-left: none; padding-left: 0; }
+/* Set like a magazine letter: a big opening line, then a dropped initial. */
+.editors-letter__opening { margin: 0 0 3svh; font-weight: 800; font-size: clamp(22px, 2.3vw, 37px); line-height: 1.08; letter-spacing: -0.02em; max-width: 24ch; }
+.editors-letter__body { margin: 0 0 1.2em; max-width: 60ch; font-size: 18px; line-height: 1.62; }
+.editors-letter__opening + .editors-letter__body::first-letter {
+  float: left; font-weight: 900; color: var(--red); font-size: 4.4em; line-height: .78; padding: .06em .1em 0 0;
+}
+.editors-letter__signature { margin: 2svh 0 0; font-style: italic; font-size: 24px; }
+.editors-letter__role { margin: 4px 0 0; font-style: italic; color: var(--grey); }
+
+.editors-letter__tally { list-style: none; margin: 0; padding: 14px 0 0; border-top: 4px solid var(--ink); }
+.editors-letter__tally li { display: flex; align-items: baseline; gap: 14px; padding: 6px 0; border-bottom: 1px solid var(--faint); }
+.editors-letter__count { font-weight: 900; font-size: clamp(29px, 3.2vw, 55px); line-height: 1; letter-spacing: -0.03em; color: var(--red); min-width: 2.1ch; }
+.editors-letter__noun { font-style: italic; font-size: 19px; }
+
+@media (max-width: 900px) {
+  .editors-letter { min-height: 0; padding: 72px var(--gutter); }
+  .editors-letter__grid { grid-template-columns: 1fr; }
 }

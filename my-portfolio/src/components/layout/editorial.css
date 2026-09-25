@@ -1,0 +1,14 @@
+/* A back-matter page: at least a screen tall, generous top space under the
+   running head, title first. */
+.page { min-height: 100svh; padding-top: calc(var(--head-height) + 9svh); padding-bottom: 12svh; }
+.page__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; margin-bottom: 7svh; }
+.page__head .headline { margin: 0; }
+.page__deck { margin: 0; max-width: 28ch; font-style: italic; font-size: var(--t-lead); color: var(--grey); text-align: right; }
+
+@media (max-width: 900px) {
+  .page { padding-top: 88px; padding-bottom: 72px; min-height: 0; }
+  .page__deck { text-align: left; }
+}
+
+/* A heavy rule where one paper page meets the next (Work, Chronicles, Blueprint, Field reports). */
+#log, #blueprint, #reports { border-top: 4px solid var(--ink); }

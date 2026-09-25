@@ -1,36 +1,60 @@
-.chronicles { padding-top: 70px; padding-bottom: 40px; }
-.chronicles__list { margin-top: 40px; }
+.road-wrap { --road: 0; --path: 0; position: relative; }
 
-.era { position: relative; padding: 70px 0 80px; overflow: hidden; }
-.era__ghost {
-  position: absolute; top: 50%; right: 0; left: auto; transform: translateY(-50%);
-  font-family: var(--font-serif); font-weight: 900; font-size: clamp(120px, 22vw, 320px);
-  color: var(--ink); opacity: 0.05; line-height: 1; pointer-events: none; user-select: none;
+/* ---- Shared: nodes and reached state ---- */
+.road__node {
+  position: absolute; width: 18px; height: 18px; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--paper); border: 4px solid var(--ink); transition: background-color .25s ease, border-color .25s ease;
 }
-.era:nth-child(even) .era__ghost { right: auto; left: 0; } /* alternate sides */
+.road__stop.is-reached > .road__node { background: var(--red); border-color: var(--red); }
+.road__node--station { width: 34px; height: 34px; border-width: 6px; }
+.road__year { font-weight: 900; line-height: .9; letter-spacing: -0.04em; font-size: clamp(44px, 6.4vw, 96px); font-variation-settings: "opsz" 144; }
+.road__era-name { margin-top: 6px; font-style: italic; font-size: 20px; color: var(--grey); }
+.road__milestone-name { font-weight: 800; font-size: clamp(19px, 1.9vw, 28px); line-height: 1.08; letter-spacing: -0.015em; }
+.road__milestone-tag { margin-top: 4px; font-style: italic; font-size: 16px; color: var(--grey); }
+.road__node--here { width: 26px; height: 26px; border-width: 5px; }
+.road__here.is-reached > .road__node--here { animation: hereBeat 1.6s ease-out infinite; }
+.road__here-label { position: absolute; white-space: nowrap; font-weight: 800; font-size: 20px; color: var(--red); }
+@keyframes hereBeat { 0% { box-shadow: 0 0 0 0 rgba(200, 55, 30, .55); } 100% { box-shadow: 0 0 0 22px rgba(200, 55, 30, 0); } }
 
-.era__grid { display: grid; grid-template-columns: 120px 28px 1fr; gap: 0; position: relative; }
-.era__year { font-family: var(--font-serif); font-weight: 900; font-size: clamp(28px, 3.5vw, 44px); line-height: 1; }
-.era__name { color: var(--red); letter-spacing: 2px; margin-top: 8px; }
+/* ---- Wide screens: the winding road ---- */
+.road--winding { position: relative; width: 100%; }
+.road__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.road__line, .road__fill { fill: none; stroke-linecap: round; }
+.road__line { stroke: var(--ink); stroke-opacity: .35; stroke-width: 5; stroke-dasharray: 12 10; }
+.road__fill { stroke: var(--red); stroke-width: 7; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--path)); }
 
-/* Spine: the line runs on into the next era, except after the last one. */
-.era__spine { position: relative; }
-.era__line { position: absolute; left: 50%; top: 6px; bottom: -80px; width: 1px; background: var(--ink); }
-.era:last-child .era__line { bottom: auto; height: 14px; }
-.era__dot {
-  position: absolute; left: 50%; top: 6px; width: 9px; height: 9px;
-  background: var(--red); transform: translateX(-50%); border-radius: 50%;
+.road__stop { position: absolute; }
+.road--winding .road__stop { transform: none; }
+
+/* Labels hang above or below the road, clear of it. */
+.road__label { position: absolute; left: 0; width: max(180px, 21vw); max-width: 280px; transform: translateX(-50%); text-align: center; }
+.road__milestone--below .road__label { top: 26px; }
+.road__milestone--above .road__label { bottom: 26px; }
+
+/* Stations carry the year, above the start of each row. */
+.road__station-label { position: absolute; bottom: 30px; white-space: nowrap; }
+.road__station-label--l { left: -6px; text-align: left; }
+.road__station-label--r { right: -6px; text-align: right; }
+
+.road__here-label { top: 26px; right: -8px; transform: none; }
+
+/* ---- Small screens: a straight road down the left edge ---- */
+.road--list { display: none; }
+@media (max-width: 900px) {
+  .road--winding { display: none; }
+  .road--list { display: block; position: relative; list-style: none; margin: 0; padding: 0 0 4svh; }
+  .road__line-v, .road__fill-v { position: absolute; top: 0; bottom: 0; left: 14px; width: 6px; transform: translateX(-50%); }
+  .road__line-v { background: repeating-linear-gradient(to bottom, var(--ink) 0 14px, transparent 14px 24px); opacity: .35; }
+  .road__fill-v { background: var(--red); transform-origin: top; transform: translateX(-50%) scaleY(var(--road)); }
+  .road__era { position: relative; padding-bottom: 32px; }
+  .road__station-v { position: relative; padding: 24px 0 20px 52px; }
+  .road__station-v .road__node { left: 14px; top: 44px; }
+  .road__stops-v { list-style: none; margin: 0; padding: 0; }
+  .road__milestone-v { position: relative; padding: 0 0 22px 52px; }
+  .road__milestone-v .road__node { left: 14px; top: .6em; }
+  .road__year { font-size: clamp(44px, 14vw, 72px); }
 }
-
-.era__milestones { list-style: none; margin: 0; padding: 0 0 0 20px; }
-.era__milestone {
-  padding: 12px 0; display: flex; justify-content: space-between; gap: 16px;
-  border-bottom: 1px dotted var(--faint); max-width: 860px;
-}
-.era__milestone-name { font-weight: 700; font-size: 16px; }
-.era__milestone-tag { color: var(--grey); text-align: right; }
-
-@media (max-width: 720px) {
-  .era__grid { grid-template-columns: 84px 20px 1fr; }
-  .era__ghost { font-size: 96px; opacity: 0.06; }
+@media (prefers-reduced-motion: reduce) {
+  .road__node { transition: none; }
+  .road__here.is-reached > .road__node--here { animation: none; }
 }

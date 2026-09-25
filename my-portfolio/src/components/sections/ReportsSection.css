@@ -1,11 +1,44 @@
-.reports { padding-top: 40px; padding-bottom: 20px; }
-.reports__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
-.report { border: 1px solid var(--ink); padding: 22px; background: var(--card); }
-.report__title { letter-spacing: 1.5px; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 12px; }
-.report__outcomes { list-style: none; margin: 0; padding: 0; }
-.report__outcome { display: flex; gap: 10px; padding: 6px 0; font-size: 14.5px; }
-.report__check { color: var(--red); font-weight: 700; }
+/* The ledger: thin rules, typographic hierarchy, the outcome as the focus.
+   Rows never move; hover only tints the row and marks its number. */
+.ledger__year { margin: clamp(28px, 6svh, 56px) 0 10px; font-style: italic; font-weight: 400; font-size: var(--t-lead); color: var(--grey); }
+.ledger__year:first-child { margin-top: 0; }
+.ledger__list { list-style: none; margin: 0; padding: 0; border-top: 3px solid var(--ink); }
 
-@media (max-width: 860px) {
-  .reports__grid { grid-template-columns: 1fr; }
+.entry {
+  position: relative; isolation: isolate; display: grid; align-items: baseline;
+  grid-template-columns: 3.2ch minmax(0, .55fr) minmax(0, 2fr) 5ch; column-gap: clamp(16px, 3vw, 56px);
+  padding: clamp(22px, 4.2svh, 44px) 0; border-bottom: 1px solid var(--ink);
+}
+/* Hover: the row takes a faint tint, and its number turns red. Nothing shifts. */
+.entry::before {
+  content: ""; position: absolute; z-index: -1; inset: 0 calc(var(--gutter) * -0.4); background: var(--well);
+  opacity: 0; transition: opacity .25s ease;
+}
+.entry:hover::before, .entry:focus-within::before { opacity: 1; }
+
+.entry__no { font-family: var(--font-mono); font-size: 12px; color: var(--grey); transition: color .25s ease; }
+.entry:hover .entry__no, .entry:focus-within .entry__no { color: var(--red); }
+.entry__event { font-style: italic; font-size: 18px; line-height: 1.3; color: var(--grey); }
+.entry__outcome {
+  margin: 0; font-weight: 900; line-height: .98; letter-spacing: -0.03em; max-width: 22ch;
+  font-size: clamp(28px, 3.7vw, 60px); font-variation-settings: "opsz" 144;
+}
+.entry__detail { margin: clamp(8px, 1.6svh, 14px) 0 0; font-size: 18px; line-height: 1.4; color: var(--grey); max-width: 52ch; }
+.entry__link {
+  display: block; margin: clamp(8px, 1.6svh, 14px) 0 0; padding: 0; background: none; border: none; cursor: pointer; font: inherit;
+  font-style: italic; font-size: 17px; color: var(--ink); text-decoration: underline; text-decoration-color: var(--red);
+  text-decoration-thickness: 2px; text-underline-offset: 4px;
+}
+.entry__link:hover { color: var(--red); }
+.entry__link:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+.entry__year { font-family: var(--font-mono); font-size: 12px; text-align: right; color: var(--grey); }
+
+@media (max-width: 900px) {
+  .entry { grid-template-columns: 2.6ch minmax(0, 1fr) auto; row-gap: 6px; }
+  .entry__event { grid-column: 2; grid-row: 1; }
+  .entry__year { grid-column: 3; grid-row: 1; }
+  .entry__body { grid-column: 2 / 4; grid-row: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entry::before, .entry__no { transition: none; }
 }

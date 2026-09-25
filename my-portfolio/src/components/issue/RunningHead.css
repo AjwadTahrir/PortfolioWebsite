@@ -1,0 +1,40 @@
+.running-head {
+  position: fixed; z-index: 95; top: 0; right: 0; left: var(--margin-l); height: var(--head-height);
+  display: grid; grid-template-columns: 1fr auto 1fr auto; align-items: center; column-gap: 20px;
+  padding: 0 var(--gutter); color: var(--ink);
+}
+/* The newsprint bar fades in as the cover plays out. */
+.running-head::before {
+  content: ""; position: absolute; inset: 0; background: var(--paper);
+  border-bottom: 1px solid var(--ink); opacity: var(--cover-p);
+}
+.running-head > * { position: relative; }
+.running-head__mark {
+  justify-self: start; font-weight: 900; font-size: 20px; letter-spacing: -0.01em; color: var(--ink);
+  text-decoration: none; opacity: clamp(0, calc((var(--cover-p) - .6) * 3), 1);
+}
+.running-head__section {
+  font-style: italic; font-size: 17px; color: var(--ink); animation: headSwap .3s cubic-bezier(.2, .7, .3, 1);
+  opacity: clamp(0, calc((var(--cover-p) - .6) * 3), 1);
+}
+.running-head__folio {
+  justify-self: end; display: flex; align-items: baseline; gap: 6px; overflow: hidden;
+  opacity: clamp(0, calc((var(--cover-p) - .6) * 3), 1);
+}
+.running-head__no { font-weight: 900; font-size: 20px; color: var(--red); font-variant-numeric: tabular-nums; animation: headSwap .3s cubic-bezier(.2, .7, .3, 1); }
+.running-head__total { font-family: var(--font-mono); font-size: 11px; color: var(--grey); }
+.running-head__contents {
+  justify-self: end; background: var(--ink); color: var(--paper); border: none; cursor: pointer;
+  font-family: inherit; font-size: 16px; font-weight: 600; padding: 7px 18px;
+  transition: background .18s ease;
+}
+.running-head__contents:hover { background: var(--red); }
+@keyframes headSwap { from { opacity: 0; transform: translateY(8px); } }
+
+@media (max-width: 900px) {
+  .running-head { grid-template-columns: 1fr auto auto; }
+  .running-head__section { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .running-head__section, .running-head__no { animation: none; }
+}

@@ -1,0 +1,107 @@
+/* ---- One screen, scrolling away like any page ---- */
+.cover { position: relative; }
+.cover__stage {
+  position: relative; height: 100svh; min-height: 560px; overflow: hidden;
+  background: var(--well); color: var(--ink);
+  padding-left: calc(var(--margin-l) + var(--gutter)); padding-right: var(--gutter);
+}
+
+/* Art: the red page, a static block on the right. */
+.cover__art {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 46%; overflow: hidden;
+ background: var(--red);
+}
+
+.cover__meta {
+  position: absolute; z-index: 3; top: calc(var(--head-height) + 14px);
+  left: calc(var(--margin-l) + var(--gutter)); right: var(--gutter);
+  display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px;
+  color: var(--ink); padding-bottom: 12px; border-bottom: 2px solid var(--ink);
+}
+
+/* Title: enormous and ink, kept on the left page: "TAHRIR" is about 4x the font size wide,
+   so 11.8vw ends it before the red begins (54% across). */
+.cover__title {
+  position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: 54%; /* the left page */
+  display: flex; align-items: center; justify-content: flex-start; text-align: left; pointer-events: none;
+  padding-left: calc(var(--margin-l) + var(--gutter));
+}
+.cover__title-inner {
+  font-weight: 900; color: var(--ink); font-size: min(11.8vw, 24svh); line-height: 0.8; letter-spacing: 0.005em;
+  font-variation-settings: "opsz" 144;
+  text-shadow: 7px 9px 0 rgba(26, 25, 23, .09);
+}
+.cover__word { display: block; overflow: hidden; padding: 0.05em 0 0.02em; }
+.cover__ch { display: inline-block; }
+
+/* A big tonal numeral behind the teasers: darker red on red, cropped by the page edge. */
+.cover__numeral {
+  position: absolute; right: -4%; top: 10svh; z-index: 0; user-select: none; pointer-events: none;
+  font-weight: 900; line-height: .8; letter-spacing: -0.06em; font-size: min(46vw, 92svh);
+  font-variation-settings: "opsz" 144; color: color-mix(in srgb, var(--red) 84%, black);
+}
+
+/* Foot (left page): the deck. */
+.cover__foot { position: absolute; z-index: 3; left: calc(var(--margin-l) + var(--gutter)); bottom: clamp(24px, 6svh, 60px); }
+.cover__deck { font-style: italic; font-size: clamp(18px, 1.5vw, 22px); margin: 0; color: var(--ink); }
+
+/* Teasers (red page): the cover lines, set large in newsprint, each with its page number. */
+.cover__teasers {
+  position: absolute; z-index: 3; right: var(--gutter); bottom: clamp(24px, 6svh, 60px);
+  left: calc(54% + clamp(20px, 3vw, 56px));
+}
+.cover__lines { list-style: none; margin: 0; padding: 0; border-top: 3px solid var(--paper); }
+.cover__line {
+  position: relative; display: flex; justify-content: space-between; align-items: baseline; gap: 20px;
+  padding: clamp(10px, 1.8svh, 18px) 8px; color: var(--paper); text-decoration: none; border-bottom: 1px solid rgba(241, 237, 228, .55);
+  font-weight: 700; font-size: clamp(20px, 1.85vw, 29px); line-height: 1.15; letter-spacing: -0.01em; isolation: isolate;
+}
+/* Hover: a newsprint block sweeps across the row from the left. */
+.cover__line::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--paper);
+  transform: scaleX(0); transform-origin: left; transition: transform .28s cubic-bezier(.2, .7, .3, 1);
+}
+.cover__line:hover, .cover__line:focus-visible { color: var(--ink); }
+.cover__line:hover::before, .cover__line:focus-visible::before { transform: none; }
+.cover__line-pg { color: inherit; white-space: nowrap; font-size: 12px; font-weight: 400; }
+.cover__line:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+/* ---- Opening: the one orchestrated moment, first visit of a session ----
+   0.0s right page wipes up   0.2s masthead sets letter by letter   1.3s cover
+   lines rise. */
+.is-opening .cover__art { animation: artWipe 1s cubic-bezier(.65, 0, .2, 1) both; }
+.is-opening .cover__ch { animation: setLetter .8s cubic-bezier(.2, .7, .3, 1) both; animation-delay: calc(.25s + var(--c) * .07s); }
+.is-opening .cover__meta, .is-opening .cover__deck { animation: fadeIn .6s ease 1s both; }
+.is-opening .cover__lines li { animation: riseIn .6s cubic-bezier(.2, .7, .3, 1) both; animation-delay: calc(1.3s + var(--i, 0) * .1s); }
+.is-opening .cover__lines li:nth-child(2) { --i: 1; }
+.is-opening .cover__lines li:nth-child(3) { --i: 2; }
+@keyframes artWipe { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes setLetter { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(18px); } }
+
+/* ---- Mobile: the cover is a stack, and the red band is only as tall as the
+   contents list it holds (the art and the list share one grid cell) ---- */
+@media (max-width: 900px) {
+  .cover__stage {
+    height: auto; min-height: 100svh; padding: 0; display: grid; grid-template-columns: 100%;
+    grid-template-rows: auto 1fr auto auto; /* the beige section takes the spare height; the red hugs its list */
+  }
+  .cover__meta { position: static; grid-row: 1; margin: calc(var(--head-height) + 14px) var(--gutter) 0; }
+  .cover__meta span:nth-child(2) { display: none; }
+  .cover__title { position: static; grid-row: 2; width: auto; padding: 18px var(--gutter) 0; display: block; }
+  .cover__title-inner { font-size: min(20vw, 22svh); }
+  .cover__title { padding-top: 40px; padding-bottom: 20px; align-self: center; }
+  /* The deck sits at the bottom left of the beige section, with room above it. */
+  .cover__foot { position: static; grid-row: 3; padding: 56px var(--gutter) 22px; align-self: end; }
+
+  /* The red band: the page block and the list occupy the same cell, so the
+     red is exactly as tall as the list plus its padding. */
+  .cover__art { position: relative; inset: auto; width: auto; grid-row: 4; grid-column: 1; }
+  .cover__teasers { position: relative; inset: auto; grid-row: 4; grid-column: 1; padding: 30px var(--gutter); }
+  .cover__lines { width: 100%; }
+  .cover__line { font-size: clamp(18px, 5.2vw, 24px); padding: 10px 6px; }
+  .cover__numeral { font-size: min(70vw, 60svh); top: -14%; right: -8%; }
+}
+
+/* ---- Reduced motion: a static cover, then the page ---- */

@@ -12,7 +12,7 @@ export default function Newswire({ onOpenProject }) {
 
   return (
     <div className="newswire">
-      <div className="newswire__track mono">
+      <div className="newswire__track">
         {[false, true].map((isCopy) =>
           NEWSWIRE.map(({ headline, projectId }) => (
             <button
@@ -28,7 +28,7 @@ export default function Newswire({ onOpenProject }) {
           ))
         )}
       </div>
-      <div className="newswire__hint mono" aria-hidden="true">CLICK A HEADLINE TO READ THE STORY ↓</div>
+      <div className="newswire__hint" aria-hidden="true">Click a headline to read the story</div>
     </div>
   );
 }

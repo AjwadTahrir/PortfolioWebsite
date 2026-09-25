@@ -11,17 +11,25 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [ta
    returned to the trigger on close).
 
    `children` is a render function receiving `requestClose`, so the
-   content's own close buttons play the exit animation too. */
-export default function Overlay({ label, onClose, children }) {
-  const [isShown, setIsShown] = useState(false);
+   content's own close buttons play the exit animation too.
+
+   `morph`: the parent animates the panel in and out itself (a View
+   Transition from the trigger tile), so the panel mounts fully shown and
+   closes immediately instead of running its own enter/exit. */
+export default function Overlay({ label, onClose, panelClassName = "", morph = false, children }) {
+  const [isShown, setIsShown] = useState(morph);
   const panelRef = useRef(null);
   const exitTimer = useRef(null);
 
   const requestClose = useCallback(() => {
+    if (morph) {
+      onClose();
+      return;
+    }
     if (exitTimer.current) return;
     setIsShown(false);
     exitTimer.current = setTimeout(onClose, EXIT_DURATION_MS);
-  }, [onClose]);
+  }, [onClose, morph]);
 
   // Enter animation, scroll lock, focus in/out.
   useEffect(() => {
@@ -29,7 +37,7 @@ export default function Overlay({ label, onClose, children }) {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     panelRef.current?.focus({ preventScroll: true });
-    const frame = requestAnimationFrame(() => setIsShown(true));
+    const frame = morph ? 0 : requestAnimationFrame(() => setIsShown(true));
 
     return () => {
       cancelAnimationFrame(frame);
@@ -37,7 +45,7 @@ export default function Overlay({ label, onClose, children }) {
       document.body.style.overflow = previousOverflow;
       trigger?.focus?.({ preventScroll: true });
     };
-  }, []);
+  }, [morph]);
 
   // Escape closes; Tab stays inside the dialog.
   useEffect(() => {
@@ -69,7 +77,7 @@ export default function Overlay({ label, onClose, children }) {
   return createPortal(
     <div className="overlay" role="dialog" aria-modal="true" aria-label={label}>
       <div className={`overlay__backdrop${shownClass}`} onClick={requestClose} />
-      <div ref={panelRef} className={`overlay__panel${shownClass}`} tabIndex={-1}>
+      <div ref={panelRef} className={`overlay__panel${shownClass}${panelClassName ? ` ${panelClassName}` : ""}${morph ? " overlay__panel--morph" : ""}`} tabIndex={-1}>
         {children(requestClose)}
       </div>
     </div>,

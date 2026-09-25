@@ -1,22 +1,16 @@
-import Reveal from "../ui/Reveal";
-import PageFoot from "./PageFoot";
-import SectionBreak from "./SectionBreak";
+import "./editorial.css";
 
-/* A numbered magazine page: page-turn break, kicker ("02 · ENGINEERING
-   NOTES"), headline, content, and the page folio.
-   `className` carries the section's own spacing/styles. */
-export default function EditorialSection({ id, no, kicker, breakLabel, title, className = "", children }) {
+/* A page of the back matter: one huge title, then the content. The page
+   number lives in the margin strip (data/navigation.js), so there is no
+   per-section furniture here. `className` carries the section's own layout. */
+export default function EditorialSection({ id, title, deck, className = "", children }) {
   return (
-    <>
-      <SectionBreak no={no} label={breakLabel} />
-      <section id={id} className={`wrap ${className}`}>
-        <Reveal>
-          <div className="kicker">{no} · {kicker}</div>
-          <h2 className="headline headline--section">{title}</h2>
-          {children}
-        </Reveal>
-        <PageFoot no={no} />
-      </section>
-    </>
+    <section id={id} className={`wrap page snap-page ${className}`}>
+      <header className="page__head">
+        <h2 className="headline headline--section">{title}</h2>
+        {deck && <p className="page__deck">{deck}</p>}
+      </header>
+      {children}
+    </section>
   );
 }

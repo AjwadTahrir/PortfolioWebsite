@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import Overlay from "../../components/ui/Overlay";
 import PhotoSheet from "./PhotoSheet";
+import CampusLife from "./CampusLife";
+import LifeArchive from "./LifeArchive";
 import RunnersLog from "./RunnersLog";
 
 const FieldNotesMap = lazy(() => import("./FieldNotesMap"));
@@ -10,10 +12,14 @@ const FieldNotesMap = lazy(() => import("./FieldNotesMap"));
 const CONTENT_BY_ID = {
   travel: FieldNotesMap,
   running: RunnersLog,
+  university: CampusLife,
+  life: LifeArchive,
 };
 
 export default function ArchiveOverlay({ item, onClose, morph }) {
-  const Content = item.photos?.length ? PhotoSheet : CONTENT_BY_ID[item.id];
+  // An id-specific component always wins, even with zero photos (Life shows
+  // placeholder frames rather than falling through to the plain PhotoSheet).
+  const Content = CONTENT_BY_ID[item.id] ?? (item.photos?.length ? PhotoSheet : null);
 
   return (
     <Overlay label={item.title} onClose={onClose} morph={morph}>

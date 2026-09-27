@@ -106,3 +106,7 @@
 .image-upload-field__controls { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .image-upload-field__controls .admin-cell { flex: 1; min-width: 200px; }
 .image-upload-field__hint { color: var(--grey); }
+
+/* ---- Checkbox (Featured, PhotosEditor) ---- */
+.admin-checkbox { display: flex; align-items: center; gap: 8px; }
+.admin-checkbox input { width: 16px; height: 16px; accent-color: var(--ink); }

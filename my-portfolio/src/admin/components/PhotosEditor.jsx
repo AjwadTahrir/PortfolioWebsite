@@ -3,10 +3,13 @@ import useCrud from "../useCrud";
 import ImageUploadField from "./ImageUploadField";
 import { deleteImage } from "../../lib/uploadImage";
 
-/* Photos for an Archive tile: a list of { src, caption }, shown on the site as
-   a contact sheet (Photography) and, for the first photo, behind the tile.
-   `photos` is a column added by the editorial-redesign migration; until a row
-   has it, the editor says so instead of failing on save. */
+/* Photos for an Archive tile: a list of { src, caption, tag, statLine,
+   featured }, shown on the site as a contact sheet (Photography), a curated
+   grid (Life), and, for the first photo, behind the tile. Tag/statLine/
+   featured only do anything on Life's grid; Photography's plain contact
+   sheet ignores them, so it's harmless to fill them in on any tile.
+   `photos` is a column added by the editorial-redesign migration; until a
+   row has it, the editor says so instead of failing on save. */
 export default function PhotosEditor({ items }) {
   const withPhotos = items.filter((item) => "photos" in item);
   const [itemId, setItemId] = useState("photography");
@@ -59,12 +62,20 @@ function PhotoList({ item }) {
       {error && <p className="admin-error mono">{error}</p>}
       <p className="admin-hint mono">
         Use 3:2 photos, about 1600px on the long side. A caption of place and year works well. The first
-        photo is also shown behind the tile.
+        photo is also shown behind the tile. Tag, stat line and Featured only matter on Life&apos;s grid.
       </p>
       {photos.map((photo, i) => (
         <div key={i} className="admin-repeat-row admin-repeat-row--visual">
           <ImageUploadField value={photo.src} onChange={(src) => change(i, { src })} projectId={`archive-${item.id}`} />
-          <input placeholder="caption (e.g. Great Ocean Road, 2026)" value={photo.caption || ""} onChange={(e) => change(i, { caption: e.target.value })} />
+          <input placeholder="caption (e.g. A late evening after class)" value={photo.caption || ""} onChange={(e) => change(i, { caption: e.target.value })} />
+          <div className="admin-add-form__grid">
+            <input placeholder="tag, optional (e.g. Running)" value={photo.tag || ""} onChange={(e) => change(i, { tag: e.target.value })} />
+            <input placeholder="stat line, optional (e.g. 21.1 km · 2026)" value={photo.statLine || ""} onChange={(e) => change(i, { statLine: e.target.value })} />
+            <label className="admin-checkbox">
+              <input type="checkbox" checked={!!photo.featured} onChange={(e) => change(i, { featured: e.target.checked })} />
+              <span className="mono">Featured (full width)</span>
+            </label>
+          </div>
           <div className="admin-row-actions">
             <button type="button" className="admin-btn admin-btn--small" disabled={i === 0} onClick={() => move(i, -1)}>UP</button>
             <button type="button" className="admin-btn admin-btn--small" disabled={i === photos.length - 1} onClick={() => move(i, 1)}>DOWN</button>

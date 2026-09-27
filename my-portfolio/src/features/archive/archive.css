@@ -172,3 +172,115 @@
 .viewer__btn:hover { background: var(--ink); color: var(--paper); }
 .viewer__btn:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .sheet__img { transition: none; } }
+
+/* Campus Life */
+.campus__block { padding-top: 24px; border-top: 1px solid var(--faint); }
+.campus__block:first-child { padding-top: 0; border-top: none; }
+.campus__p { margin-top: 10px; }
+.campus__p:first-of-type { margin-top: 0; }
+
+.campus__eyebrow { color: var(--red); }
+.campus__stage-heading {
+  font-family: var(--font-serif); font-weight: 900; font-size: clamp(26px, 3.4vw, 40px); margin: 6px 0 4px;
+}
+.campus__stats { display: flex; gap: 32px; margin: 18px 0 0; }
+.campus__stats dt { margin: 0; font-style: italic; font-size: 13px; color: var(--grey); }
+.campus__stats dd { margin: 2px 0 0; font-family: var(--font-serif); font-weight: 700; font-size: 20px; }
+
+.campus__heading {
+  font-family: var(--font-serif); font-style: italic; font-size: 22px; letter-spacing: 0;
+  text-transform: lowercase; color: var(--grey); margin: 0 0 10px;
+}
+.campus__heading::first-letter { text-transform: uppercase; }
+
+/* The coursework: no boxes or badges, just a label and a flowing line. */
+.campus__levels { margin-top: 14px; display: flex; flex-direction: column; gap: 16px; }
+.campus__level-label { font-style: italic; font-size: 13px; color: var(--grey); }
+.campus__courses { margin: 4px 0 0; font-size: 15px; line-height: 1.7; max-width: 66ch; }
+
+/* The subjects that stayed */
+.campus__subjects { list-style: none; margin: 4px 0 0; padding: 0; }
+.campus__subject { padding: 12px 0; border-bottom: 1px solid var(--faint); }
+.campus__subject:last-child { border-bottom: none; }
+.campus__subject-name { font-family: var(--font-serif); font-weight: 700; font-size: 17px; }
+.campus__subject-note { margin: 4px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--grey); }
+
+/* The builds */
+.campus__builds { list-style: none; margin: 4px 0 0; padding: 0; max-width: 70ch; }
+.campus__build { display: block; padding: 9px 0; border-bottom: 1px dotted var(--faint); }
+.campus__build-name { display: block; font-family: var(--font-serif); font-weight: 700; font-size: 15.5px; }
+.campus__build-note { display: block; margin-top: 3px; color: var(--grey); font-size: 14.5px; }
+.campus__aside { margin-top: 14px; font-style: italic; color: var(--grey); font-size: 14.5px; line-height: 1.6; max-width: 60ch; }
+
+.campus__staccato {
+  font-family: var(--font-serif); font-weight: 800; font-size: clamp(19px, 2.2vw, 26px);
+  line-height: 1.4; margin: 14px 0;
+}
+
+/* The campus archive: a short log, newest (last) node in red. */
+.campus__log { list-style: none; margin: 4px 0 0; padding: 0; }
+.campus__log { --time-width: 130px; --node-size: 9px; --column-gap: 14px; }
+.campus__moment {
+  position: relative; display: grid; grid-template-columns: var(--time-width) var(--node-size) 1fr;
+  column-gap: var(--column-gap); align-items: center; padding: 9px 0;
+}
+.campus__moment::before {
+  content: ""; position: absolute; left: calc(var(--time-width) + var(--column-gap) + var(--node-size) / 2 - 0.5px);
+  top: 50%; height: 100%; width: 1px; background: var(--faint);
+}
+.campus__moment:last-child::before { display: none; }
+.campus__moment-time { color: var(--grey); }
+.campus__moment-node { position: relative; z-index: 1; width: var(--node-size); height: var(--node-size); border-radius: 50%; background: var(--ink); }
+.campus__moment:last-child .campus__moment-node { background: var(--red); }
+.campus__moment-label { font-size: 15.5px; }
+
+.campus__coda { font-family: var(--font-serif); font-style: italic; font-weight: 700; font-size: clamp(19px, 2vw, 24px); margin: 10px 0 0; }
+.campus__coda:first-of-type { margin-top: 16px; }
+.campus__colophon { margin-top: 22px; color: var(--grey); letter-spacing: 1px; }
+
+@media (max-width: 480px) {
+  .campus__log { --time-width: 104px; }
+  .campus__moment-time { font-size: 10.5px; }
+}
+
+/* Life: a curated grid, not a masonry gallery — every cell is the same fixed
+   shape except a featured entry, which breaks out full-width. */
+.life__empty-lede { color: var(--grey); margin-bottom: 18px; }
+.life__grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: auto; gap: 14px;
+}
+
+.life__frame { margin: 0; }
+.life__img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--well); }
+.life__cap { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.life__tag { font-style: italic; font-size: 13px; color: var(--grey); }
+.life__stat { font-family: var(--font-mono); font-size: 12px; color: var(--red); letter-spacing: .3px; }
+.life__caption { font-style: italic; font-size: 14.5px; line-height: 1.4; color: var(--ink); }
+
+/* Placeholder: honest, not decorative — a dashed frame, a tag, a plain note. */
+.life__frame--empty {
+  aspect-ratio: 4 / 5; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; border: 1px dashed var(--faint); background: var(--card);
+}
+.life__frame--empty .life__tag { color: var(--faint); }
+.life__empty-note { font-family: var(--font-mono); font-size: 11px; color: var(--faint); letter-spacing: .5px; }
+
+/* Featured: full width, text overlaid on the photo. */
+.life__frame--featured { grid-column: 1 / -1; position: relative; }
+.life__frame--featured .life__img { aspect-ratio: 16 / 9; }
+.life__overlay-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 3px;
+  padding: 40px 20px 18px; color: var(--paper);
+  background: linear-gradient(to top, rgba(23, 22, 19, .85), rgba(23, 22, 19, 0));
+}
+.life__tag--on-image { color: rgba(241, 237, 228, .75); }
+.life__stat--on-image { color: var(--paper); }
+.life__caption--on-image { color: var(--paper); font-size: 16px; }
+
+@media (max-width: 720px) {
+  .life__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .life__grid { grid-template-columns: 1fr; }
+  .life__frame--empty, .life__img { aspect-ratio: 3 / 2; }
+}

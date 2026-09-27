@@ -1,27 +1,12 @@
-/* Curation for The Work. Matching is case-insensitive on the project id.
+/* Curation for The Work. Projects are grouped by their importance label in
+   the database (cover, feature, note) and ordered by their sort_order, both
+   edited in /admin.
 
-   WORK_ORDER: the order projects appear in within their group (cover story,
-   features, notes). An id listed here with no matching project is skipped, so
-   "lepak" and "cropwatch" slot into place the moment they exist in the
-   database; a project not listed simply sorts after the listed ones.
-
-   TAGLINES: one short line per project, specific about the problem or the
-   outcome. Drafts from each project's description, to be edited. When the
-   `projects` table gets a tagline column, read it there and drop this map;
-   until then a project without an entry falls back to the first clause of
-   its description. */
-export const WORK_ORDER = [
-  "saltellite",
-  "provenance",
-  "lepak",
-  "cropwatch",
-  "fittrack",
-  "pethealth",
-  "bizbuddy",
-  "doctelemy",
-  "marz-tamam-db",
-];
-
+   TAGLINES: fallback one-liners, used only when a project's own `tagline`
+   column is empty or does not exist yet (before the database migration has
+   been run). Once the migration has filled the column these can be deleted.
+   With no tagline anywhere, a project falls back to the first clause of its
+   description. */
 export const TAGLINES = {
   saltellite: "Satellite intelligence for coastal farmland.",
   provenance: "Verifiable credit history for underserved MSMEs.",
@@ -37,24 +22,19 @@ export const TAGLINES = {
 };
 
 export function taglineOf(project) {
+  if (project.tagline) return project.tagline;
   const drafted = TAGLINES[project.id.toLowerCase()];
   if (drafted) return drafted;
   const firstClause = project.dek.split(/ [—–] /)[0].replace(/\.$/, "");
   return `${firstClause}.`;
 }
 
-/* Position in WORK_ORDER; projects not listed sort after the listed ones. */
-function rankOf(project) {
-  const i = WORK_ORDER.indexOf(project.id.toLowerCase());
-  return i === -1 ? WORK_ORDER.length : i;
-}
-
-/* The Work, split by each project's importance label in the database:
-   the cover story (first), the features (an opener panel each), and the
-   notes (a bento grid). Each group follows WORK_ORDER, then data order. */
+/* The Work, split by each project's importance label in the database: the
+   cover story (first), the features (an opener panel each), and the notes
+   (a bento grid). Each group follows sort_order. */
 export function workGroups(projects) {
-  const byRank = (a, b) => rankOf(a) - rankOf(b);
-  const withLabel = (label) => projects.filter((p) => p.importance === label).sort(byRank);
+  const bySortOrder = (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0);
+  const withLabel = (label) => projects.filter((p) => p.importance === label).sort(bySortOrder);
   const [cover, ...extraCovers] = withLabel("cover");
   return {
     cover,

@@ -14,7 +14,7 @@ export default function ReportsSection({ projects = [], onOpenProject }) {
   const { reports, loading, error } = useReportsData();
 
   const entries = reports.map((report, i) => {
-    const meta = metaOf(report.title);
+    const meta = metaOf(report);
     const [headline, ...detail] = report.outcomes;
     const project = projects.find((p) => p.id.toLowerCase() === meta.project);
     return { id: report.id, no: String(i + 1).padStart(2, "0"), event: titleCase(report.title), headline, detail, year: meta.year, project };

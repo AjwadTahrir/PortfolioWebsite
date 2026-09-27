@@ -17,6 +17,7 @@ function Tile({ item, onOpen }) {
       className={`archive-tile archive-tile--${item.id}`}
       onClick={(event) => onOpen(item.id, event.currentTarget)}
     >
+      {item.photos?.[0]?.src && <img className="archive-tile__photo" src={item.photos[0].src} alt="" loading="lazy" decoding="async" />}
       <span className="archive-tile__glyph" aria-hidden="true">{item.kicker.charAt(0).toUpperCase()}</span>
       <span className="archive-tile__kicker">{item.kicker}</span>
       <span className="archive-tile__title">{item.title}</span>

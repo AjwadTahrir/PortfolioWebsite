@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useArchiveData from "../../hooks/cms/useArchiveData";
 import useCrud from "../useCrud";
+import PhotosEditor from "./PhotosEditor";
 
 const BLANK = { id: "", kicker: "", title: "", dek: "", placeholder: "", sort_order: 0 };
 
@@ -18,9 +19,10 @@ export default function ArchiveEditor() {
   return (
     <div>
       <p className="admin-hint mono">
-        The tile's <b>id</b> also picks its position in the bento grid (see the grid-template-areas
-        in <code>features/archive/archive.css</code>) — use one of the five existing ids to replace
-        that tile, or add a new grid-area in the CSS for a new one.
+        The tile's <b>id</b> picks its colour and row on the site (see <code>ROWS</code> in{" "}
+        <code>features/archive/ArchiveGrid.jsx</code>). The five existing ids keep their place; a tile
+        with a new id is added to a last row automatically, in the neutral colour. The kicker&apos;s first
+        letter is the big letter behind the tile.
       </p>
       {error && <p className="admin-error mono">{error}</p>}
       {loading ? (
@@ -37,6 +39,8 @@ export default function ArchiveEditor() {
           </tbody>
         </table>
       )}
+
+      <PhotosEditor items={archive} />
 
       <form className="admin-add-form" onSubmit={addItem}>
         <div className="admin-add-form__title mono">ADD TILE</div>

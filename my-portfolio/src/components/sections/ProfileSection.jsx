@@ -34,12 +34,12 @@ export default function ProfileSection() {
       <div className="profile__text">
         <h2 className="headline profile__name">Ajwad Tahrir</h2>
         <p className="profile__lede">
-          Builds software where artificial intelligence meets physical problems. From satellite
-          imagery monitoring farmland to full-stack systems built for teams, the work explores how
-          technology can create measurable impact.
+          Builds software at the intersection of AI and the physical world.
+
+From satellite intelligence to full-stack systems, the focus is simple: build useful things, test them in the real world, and ship what matters.
         </p>
         <p className="body-p profile__philosophy">
-          Working software over theoretical completeness: specify carefully, build quickly, ship what matters.
+          Specify carefully. Build quickly. Ship what matters.
         </p>
         <dl className="profile__facts">
           {FACTS.map(({ label, value }) => (

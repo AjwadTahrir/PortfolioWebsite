@@ -30,6 +30,10 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, saving, is
   const submit = async (event) => {
     event.preventDefault();
     const { stackText, coverStory, ...rest } = project;
+    // `tagline` is a column added by the editorial-redesign migration. Leave it
+    // out of the save until the row has it (or you typed one), so saving still
+    // works on a database that has not been migrated yet.
+    if (!("tagline" in initial) && !rest.tagline) delete rest.tagline;
     const payload = {
       ...rest,
       stack: stackText.split(",").map((s) => s.trim()).filter(Boolean),
@@ -45,22 +49,27 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, saving, is
       <div className="project-form__grid">
         <label className="admin-field">
           <span className="mono">ID (slug, used in URLs)</span>
-          <input value={project.id} onChange={set("id")} disabled={!isNew} required />
+          <input
+            value={project.id}
+            onChange={(e) => setProject({ ...project, id: e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, "-") })}
+            disabled={!isNew}
+            required
+          />
         </label>
         <label className="admin-field">
-          <span className="mono">PAGE NO.</span>
+          <span className="mono">PAGE NO. (shown in the story header)</span>
           <input value={project.no} onChange={set("no")} required />
         </label>
         <label className="admin-field">
-          <span className="mono">SECTION</span>
+          <span className="mono">WHERE IT APPEARS IN THE WORK</span>
           <select value={project.importance} onChange={set("importance")}>
-            <option value="cover">Cover story</option>
-            <option value="feature">Feature story</option>
-            <option value="note">Engineering note</option>
+            <option value="cover">Cover story (the opening panel; use one)</option>
+            <option value="feature">Feature (its own panel)</option>
+            <option value="note">Note (a tile under &ldquo;Also in this issue&rdquo;)</option>
           </select>
         </label>
         <label className="admin-field">
-          <span className="mono">SORT ORDER</span>
+          <span className="mono">SORT ORDER (order within its group on the site)</span>
           <input type="number" value={project.sort_order} onChange={set("sort_order")} />
         </label>
         <label className="admin-field admin-field--wide">
@@ -70,6 +79,10 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, saving, is
         <label className="admin-field admin-field--wide">
           <span className="mono">NAME</span>
           <input value={project.name} onChange={set("name")} required />
+        </label>
+        <label className="admin-field admin-field--wide">
+          <span className="mono">TAGLINE (one short line shown in The Work)</span>
+          <input value={project.tagline ?? ""} onChange={set("tagline")} placeholder="e.g. Satellite intelligence for coastal farmland." />
         </label>
         <label className="admin-field admin-field--wide">
           <span className="mono">DEK</span>
@@ -110,7 +123,7 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, saving, is
       <VisualsEditor visuals={project.visuals || []} onChange={(visuals) => setProject({ ...project, visuals })} projectId={project.id} />
 
       {project.importance === "cover" && (
-        <CoverStoryEditor coverStory={project.coverStory} onChange={(coverStory) => setProject({ ...project, coverStory })} projectId={project.id} />
+        <CoverStoryEditor coverStory={project.coverStory} onChange={(coverStory) => setProject({ ...project, coverStory })} />
       )}
 
       <button className="admin-btn" type="submit" disabled={saving}>{saving ? "SAVING…" : submitLabel}</button>
@@ -181,36 +194,27 @@ function VisualsEditor({ visuals, onChange, projectId }) {
   );
 }
 
-/* ---- Cover story (only read when importance === "cover") ----------- */
-function CoverStoryEditor({ coverStory, onChange, projectId }) {
-  const cs = coverStory || { category: "", headline: ["", "", ""], figure: { no: "", caption: "", src: "", alt: "" } };
-  const setField = (key, value) => onChange({ ...cs, [key]: value });
+/* ---- Cover story (only read when importance === "cover") -----------
+   The front page uses just the headline: it becomes the first cover line.
+   Older category and figure values are kept untouched in the row (they are
+   spread back on save) but are no longer shown, since nothing reads them. */
+function CoverStoryEditor({ coverStory, onChange }) {
+  const cs = coverStory || { headline: ["", "", ""] };
   const setHeadlineLine = (i, value) => {
-    const headline = [...cs.headline];
+    const headline = [...(cs.headline || ["", "", ""])];
     headline[i] = value;
     onChange({ ...cs, headline });
   };
-  const setFigure = (key, value) => onChange({ ...cs, figure: { ...cs.figure, [key]: value } });
 
   return (
     <fieldset className="admin-fieldset">
-      <legend className="mono">COVER STORY (front page spread)</legend>
+      <legend className="mono">COVER LINE (front page)</legend>
       <label className="admin-field">
-        <span className="mono">CATEGORY</span>
-        <input value={cs.category} onChange={(e) => setField("category", e.target.value)} />
-      </label>
-      <label className="admin-field">
-        <span className="mono">HEADLINE (3 lines, typed out on the front page)</span>
+        <span className="mono">HEADLINE (up to 3 lines, joined into the first cover line)</span>
         {[0, 1, 2].map((i) => (
-          <input key={i} className="admin-headline-line" value={cs.headline[i] || ""} onChange={(e) => setHeadlineLine(i, e.target.value)} />
+          <input key={i} className="admin-headline-line" value={(cs.headline || [])[i] || ""} onChange={(e) => setHeadlineLine(i, e.target.value)} />
         ))}
       </label>
-      <div className="admin-add-form__grid">
-        <input placeholder="fig. no" value={cs.figure.no} onChange={(e) => setFigure("no", e.target.value)} />
-        <input placeholder="caption" value={cs.figure.caption} onChange={(e) => setFigure("caption", e.target.value)} />
-        <input placeholder="alt text" value={cs.figure.alt} onChange={(e) => setFigure("alt", e.target.value)} />
-      </div>
-      <ImageUploadField value={cs.figure.src} onChange={(src) => setFigure("src", src)} projectId={projectId} />
     </fieldset>
   );
 }

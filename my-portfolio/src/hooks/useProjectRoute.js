@@ -16,7 +16,8 @@ export default function useProjectRoute(projectIds) {
   const matchProjectId = useCallback(
     (pathname) => {
       const match = pathname.match(PROJECT_PATH);
-      return match && projectIds.includes(match[1]) ? match[1] : null;
+      // Ids are matched case-insensitively, so /projects/provenance opens "Provenance".
+      return (match && projectIds.find((id) => id.toLowerCase() === match[1].toLowerCase())) || null;
     },
     [projectIds]
   );

@@ -4,13 +4,13 @@ import "./admin.css";
 import ArchiveEditor from "./components/ArchiveEditor";
 import LoginForm from "./components/LoginForm";
 import ProjectsEditor from "./components/ProjectsEditor";
-import ReportsStatsEditor from "./components/ReportsStatsEditor";
+import ReportsEditor from "./components/ReportsEditor";
 import useAdminSession from "./useAdminSession";
 
 const TABS = [
   { id: "projects", label: "Projects", Component: ProjectsEditor },
   { id: "archive", label: "Archive", Component: ArchiveEditor },
-  { id: "reports-stats", label: "Reports & Stats", Component: ReportsStatsEditor },
+  { id: "reports", label: "Field reports", Component: ReportsEditor },
 ];
 
 /* Everything under /admin. Gated by Supabase Auth; signed out (or still

@@ -145,3 +145,30 @@
 
 .runners-log__index { color: var(--faint); }
 .runners-log__label { font-weight: 700; font-size: 15.5px; }
+
+/* ---- Photography: the first photo sits behind its tile ---- */
+.archive-tile__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.archive-tile__photo + .archive-tile__glyph { display: none; }
+.archive-tile:has(.archive-tile__photo)::after {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(to top, rgba(23, 22, 19, .82), rgba(23, 22, 19, .1) 65%);
+}
+.archive-tile:has(.archive-tile__photo) > span:not(.archive-tile__glyph) { z-index: 1; color: var(--paper); }
+
+/* ---- Photography overlay: a contact sheet, and a large view ---- */
+.sheet { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 14px; }
+.sheet__frame { margin: 0; }
+.sheet__open { display: block; width: 100%; padding: 0; background: var(--well); border: 1px solid var(--ink); cursor: pointer; }
+.sheet__open:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+.sheet__img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; transition: opacity .25s ease; }
+.sheet__open:hover .sheet__img { opacity: .85; }
+.sheet__cap { margin: 6px 0 0; font-style: italic; font-size: 15px; color: var(--grey); }
+.viewer { display: grid; gap: 12px; }
+.viewer__img { display: block; width: 100%; max-height: 70svh; object-fit: contain; background: var(--well); border: 1px solid var(--ink); }
+.viewer__bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.viewer__cap { margin: 0; font-style: italic; font-size: 17px; }
+.viewer__nav { display: flex; gap: 8px; }
+.viewer__btn { background: none; border: 1px solid var(--ink); color: var(--ink); font: inherit; padding: 6px 14px; cursor: pointer; }
+.viewer__btn:hover { background: var(--ink); color: var(--paper); }
+.viewer__btn:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .sheet__img { transition: none; } }

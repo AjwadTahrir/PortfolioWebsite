@@ -1,8 +1,7 @@
-/* Evidence for the Field reports ledger. The `reports` table holds the event
-   title and its outcomes; it has no year or related project, so those live
-   here, keyed by the event title (case-insensitive). Drafts inferred from the
-   projects' own dates, to be checked. A report with no entry shows no year and
-   no link. `project` is a project id whose story the row links to. */
+/* Fallback evidence for the Field reports ledger. A report's year and related
+   project now live on the report itself (`year`, `project_id` in /admin). This
+   map, keyed by event title (case-insensitive), only fills in until the
+   database migration has been run, and can be deleted afterwards. */
 export const REPORT_META = {
   "shortcut asia challenge 2026": { year: "2026", project: "saltellite" },
   "borneohack 2026": { year: "2026", project: "bizbuddy" },
@@ -11,7 +10,15 @@ export const REPORT_META = {
   "research project": { year: "2026", project: "pethealth" },
 };
 
-export const metaOf = (title) => REPORT_META[title.toLowerCase()] ?? {};
+/* A report's own `year` and `project_id` (edited in /admin) win; the map above
+   only fills in for reports the database has nothing for yet. */
+export function metaOf(report) {
+  const fallback = REPORT_META[report.title.toLowerCase()] ?? {};
+  return {
+    year: report.year || fallback.year,
+    project: (report.project_id || fallback.project || "").toLowerCase() || undefined,
+  };
+}
 
 /* Groups entries by year, newest first. Undated entries follow in a group of
    their own. Headings are only worth showing when there is more than one dated

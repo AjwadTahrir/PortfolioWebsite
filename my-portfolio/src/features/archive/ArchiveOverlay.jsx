@@ -1,17 +1,19 @@
 import { lazy, Suspense } from "react";
 import Overlay from "../../components/ui/Overlay";
+import PhotoSheet from "./PhotoSheet";
 import RunnersLog from "./RunnersLog";
 
 const FieldNotesMap = lazy(() => import("./FieldNotesMap"));
 
-/* Tiles with a dedicated feature; the rest show their data `placeholder`. */
+/* Tiles with a dedicated feature; the rest show their data `placeholder`.
+   Photography shows its contact sheet as soon as it has photos. */
 const CONTENT_BY_ID = {
   travel: FieldNotesMap,
   running: RunnersLog,
 };
 
 export default function ArchiveOverlay({ item, onClose, morph }) {
-  const Content = CONTENT_BY_ID[item.id];
+  const Content = item.photos?.length ? PhotoSheet : CONTENT_BY_ID[item.id];
 
   return (
     <Overlay label={item.title} onClose={onClose} morph={morph}>
@@ -27,7 +29,7 @@ export default function ArchiveOverlay({ item, onClose, morph }) {
           </div>
           {Content ? (
             <Suspense fallback={<div className="body-p">Loading…</div>}>
-              <Content />
+              <Content item={item} />
             </Suspense>
           ) : (
             <div className="body-p">{item.placeholder}</div>

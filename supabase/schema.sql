@@ -18,6 +18,7 @@ create table if not exists projects (
   stack         text[] not null default '{}',
   link          text,
   year          text not null,
+  tagline       text,                    -- one line shown in The Work
   decisions     jsonb not null default '[]',   -- [{ title, body }]
   visuals       jsonb not null default '[]',   -- [{ no, caption, type, ...type-specific fields }]
   cover_story   jsonb,                          -- only set on the one "cover" project
@@ -27,14 +28,15 @@ create table if not exists projects (
 );
 
 -- ---------------------------------------------------------------------------
--- ARCHIVE ITEMS ("The Life Issue" bento tiles)
+-- ARCHIVE ITEMS (the Archive's tiles)
 -- ---------------------------------------------------------------------------
 create table if not exists archive_items (
-  id            text primary key,   -- also used as the CSS grid-area name — keep it stable
+  id            text primary key,   -- picks the tile's colour and row in ArchiveGrid.jsx — keep it stable
   kicker        text not null,
   title         text not null,
   dek           text not null,
   placeholder   text,               -- shown instead of a dedicated overlay component, if set
+  photos        jsonb not null default '[]',   -- [{ src, caption }] for the Photography contact sheet
   sort_order    int not null default 0,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
@@ -46,14 +48,16 @@ create table if not exists archive_items (
 create table if not exists reports (
   id            uuid primary key default gen_random_uuid(),
   title         text not null unique,   -- lets the seed script upsert by title instead of duplicating rows
-  outcomes      text[] not null default '{}',
+  outcomes      text[] not null default '{}',   -- first line is the ledger headline, the rest is supporting detail
+  year          text,
+  project_id    text,                            -- a projects.id; not a foreign key
   sort_order    int not null default 0,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
 );
 
 -- ---------------------------------------------------------------------------
--- STATS ("By the numbers" section)
+-- STATS (no longer shown on the site; kept so the data is not lost)
 -- ---------------------------------------------------------------------------
 create table if not exists stats (
   id            uuid primary key default gen_random_uuid(),

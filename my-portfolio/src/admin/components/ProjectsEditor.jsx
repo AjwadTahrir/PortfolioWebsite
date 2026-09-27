@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import useProjectsData from "../../hooks/cms/useProjectsData";
 import useCrud from "../useCrud";
+import { deleteFolder } from "../../lib/uploadImage";
 import ProjectForm, { blankProject } from "./ProjectForm";
 
 /* List of projects, each expandable into a full ProjectForm; a blank form
@@ -41,7 +42,11 @@ export default function ProjectsEditor() {
                   <button
                     className="admin-btn admin-btn--small admin-btn--danger"
                     disabled={savingId === project.id}
-                    onClick={() => confirm(`Delete "${project.name}"? This cannot be undone.`) && remove(project.id)}
+                    onClick={() => {
+                      if (!confirm(`Delete "${project.name}"? This cannot be undone.`)) return;
+                      deleteFolder(project.id); // best-effort clean-up of its uploaded screenshots
+                      remove(project.id);
+                    }}
                   >
                     DELETE
                   </button>

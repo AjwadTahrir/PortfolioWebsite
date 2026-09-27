@@ -1,6 +1,10 @@
 /* Admin reuses the site's tokens (ink/paper/red/mono) so it reads as part
    of the same magazine rather than a bolted-on dashboard. */
-.admin-shell { min-height: 100vh; background: var(--paper); color: var(--ink); font-family: var(--font-sans); }
+/* Force light form controls: the site's :root sets color-scheme: light dark,
+   and a browser in dark mode gives unstyled inputs light text on our white
+   backgrounds unless every field sets its own colour. Pinning the scheme
+   here is simpler and covers native chrome (selects, scrollbars) too. */
+.admin-shell { min-height: 100vh; background: var(--paper); color: var(--ink); font-family: var(--font-sans); color-scheme: light; }
 .admin-shell--centered { display: flex; align-items: center; justify-content: center; }
 
 .admin-topbar {
@@ -30,6 +34,7 @@
 .admin-field input, .admin-field textarea, .admin-field select {
   font: inherit; padding: 8px 10px; border: 1px solid var(--ink); background: #fff; color: var(--ink);
 }
+.admin-field select option { color: var(--ink); background: #fff; }
 .admin-headline-line { margin-bottom: 4px; }
 
 /* ---- Buttons ---- */
@@ -52,7 +57,7 @@
   color: var(--grey); border-bottom: 2px solid var(--ink); padding: 6px 8px;
 }
 .admin-table td { border-bottom: 1px solid var(--faint); padding: 6px 8px; vertical-align: top; }
-.admin-cell { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--faint); background: #fff; }
+.admin-cell { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--faint); background: #fff; color: var(--ink); }
 .admin-cell--narrow { width: 64px; }
 .admin-row-actions { display: flex; gap: 6px; white-space: nowrap; }
 
@@ -63,8 +68,9 @@
 .admin-add-form__title { color: var(--grey); letter-spacing: 1px; }
 .admin-add-form__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
 .admin-add-form input, .admin-add-form textarea, .admin-add-form select {
-  font: inherit; padding: 8px 10px; border: 1px solid var(--ink); background: #fff;
+  font: inherit; padding: 8px 10px; border: 1px solid var(--ink); background: #fff; color: var(--ink);
 }
+.admin-add-form select option { color: var(--ink); background: #fff; }
 .admin-hint { color: var(--grey); font-size: 11px; line-height: 1.6; max-width: 700px; margin: 0 0 16px; }
 .admin-hint code { background: var(--well); padding: 1px 5px; }
 .admin-error { color: var(--red); margin-bottom: 12px; }
@@ -81,7 +87,8 @@
 .admin-fieldset { border: 1px solid var(--faint); padding: 14px; margin: 16px 0; }
 .admin-fieldset legend { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; color: var(--grey); padding: 0 6px; }
 .admin-repeat-row { display: flex; flex-direction: column; gap: 6px; padding: 10px 0; border-bottom: 1px dotted var(--faint); }
-.admin-repeat-row input, .admin-repeat-row textarea, .admin-repeat-row select { font: inherit; padding: 6px 8px; border: 1px solid var(--faint); }
+.admin-repeat-row input, .admin-repeat-row textarea, .admin-repeat-row select { font: inherit; padding: 6px 8px; border: 1px solid var(--faint); background: #fff; color: var(--ink); }
+.admin-repeat-row select option { color: var(--ink); background: #fff; }
 .admin-repeat-row .admin-btn--danger { align-self: flex-start; }
 
 @media (max-width: 860px) {

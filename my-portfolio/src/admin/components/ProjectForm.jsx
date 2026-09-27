@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ImageUploadField from "./ImageUploadField";
+import { deleteImage } from "../../lib/uploadImage";
 
 export function blankProject() {
   return {
@@ -155,7 +156,11 @@ function DecisionsEditor({ decisions, onChange }) {
 /* ---- Visuals (typed rows: screenshot / pipeline / use-case / moscow) */
 function VisualsEditor({ visuals, onChange, projectId }) {
   const update = (i, patch) => onChange(visuals.map((v, idx) => (idx === i ? { ...v, ...patch } : v)));
-  const remove = (i) => onChange(visuals.filter((_, idx) => idx !== i));
+  const remove = (i) => {
+    const visual = visuals[i];
+    if (visual.type === "screenshot" && visual.src) deleteImage(visual.src); // best-effort; the row is removed either way
+    onChange(visuals.filter((_, idx) => idx !== i));
+  };
   const add = () => onChange([...visuals, { no: "", caption: "", type: "screenshot", src: "", alt: "" }]);
 
   return (

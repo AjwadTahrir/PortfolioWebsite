@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useCrud from "../useCrud";
 import ImageUploadField from "./ImageUploadField";
+import { deleteImage } from "../../lib/uploadImage";
 
 /* Photos for an Archive tile: a list of { src, caption }, shown on the site as
    a contact sheet (Photography) and, for the first photo, behind the tile.
@@ -67,7 +68,16 @@ function PhotoList({ item }) {
           <div className="admin-row-actions">
             <button type="button" className="admin-btn admin-btn--small" disabled={i === 0} onClick={() => move(i, -1)}>UP</button>
             <button type="button" className="admin-btn admin-btn--small" disabled={i === photos.length - 1} onClick={() => move(i, 1)}>DOWN</button>
-            <button type="button" className="admin-btn admin-btn--small admin-btn--danger" onClick={() => setPhotos(photos.filter((_, idx) => idx !== i))}>REMOVE</button>
+            <button
+              type="button"
+              className="admin-btn admin-btn--small admin-btn--danger"
+              onClick={() => {
+                if (photo.src) deleteImage(photo.src); // best-effort; the row is removed either way
+                setPhotos(photos.filter((_, idx) => idx !== i));
+              }}
+            >
+              REMOVE
+            </button>
           </div>
         </div>
       ))}

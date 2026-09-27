@@ -26,3 +26,23 @@ export default async function uploadImage(file, projectId) {
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }
+
+/* Deletes a file previously returned by uploadImage, given its public URL.
+   Best-effort: a URL that isn't one of ours (an old /screenshots/... public
+   path, or something pasted by hand) is left alone rather than thrown on. */
+export async function deleteImage(url) {
+  const marker = `/${BUCKET}/`;
+  const i = url.indexOf(marker);
+  if (i === -1) return;
+  const path = url.slice(i + marker.length).split("?")[0];
+  await supabase.storage.from(BUCKET).remove([path]);
+}
+
+/* Deletes every file under `<prefix>/` in the bucket — used when a project
+   (and everything uploaded for it) is removed entirely. Best-effort: an
+   empty or already-missing folder is silently a no-op. */
+export async function deleteFolder(prefix) {
+  const { data, error } = await supabase.storage.from(BUCKET).list(prefix);
+  if (error || !data?.length) return;
+  await supabase.storage.from(BUCKET).remove(data.map((file) => `${prefix}/${file.name}`));
+}

@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { SITE } from "../../constants/site";
+import { PROFILE } from "../../data/profile";
 import "./ProfileSection.css";
-
-const FACTS = [
-  { label: "Based in", value: "Petaling Jaya, Malaysia" },
-  { label: "Studying", value: "Software Engineering, Universiti Malaya" },
-  { label: "Focus", value: "AI × Cloud × Product Engineering" },
-  { label: "Open to", value: "Internships, hackathons, engineering projects" },
-];
 
 /* The first page after the cover: who wrote this issue. */
 export default function ProfileSection() {
@@ -33,16 +27,10 @@ export default function ProfileSection() {
 
       <div className="profile__text">
         <h2 className="headline profile__name">Ajwad Tahrir</h2>
-        <p className="profile__lede">
-          Builds software at the intersection of AI and the physical world.
-
-From satellite intelligence to full-stack systems, the focus is simple: build useful things, test them in the real world, and ship what matters.
-        </p>
-        <p className="body-p profile__philosophy">
-          Specify carefully. Build quickly. Ship what matters.
-        </p>
+        <p className="profile__lede">{PROFILE.lede}</p>
+        <p className="body-p profile__philosophy">{PROFILE.philosophy}</p>
         <dl className="profile__facts">
-          {FACTS.map(({ label, value }) => (
+          {PROFILE.facts.map(({ label, value }) => (
             <div key={label} className="profile__fact">
               <dt>{label}</dt>
               <dd>{value}</dd>

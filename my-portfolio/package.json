@@ -12,6 +12,7 @@
     "migrate-screenshots": "node scripts/migrate-screenshots-to-storage.js"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.9.0",
     "@supabase/supabase-js": "^2.45.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

@@ -18,6 +18,10 @@
 }
 .letters__link:hover::after, .letters__link:focus-visible::after { transform: scaleX(.3); }
 .letters__link:focus-visible { outline: 3px solid var(--paper); outline-offset: 6px; }
+/* The portfolio PDF download: a button dressed as the links beside it. */
+.letters__link--button { background: none; border: 0; padding: 0 0 6px; font-family: inherit; cursor: pointer; }
+.letters__link--button:disabled { cursor: progress; opacity: .7; }
+.letters__status { flex-basis: 100%; margin: 0; font-style: italic; font-size: 16px; color: var(--paper); }
 
 .letters__end { padding: 8svh 0 6svh; }
 .letters__end-title { color: var(--paper); font-size: clamp(46px, 9.4vw, 158px); line-height: .82; }

@@ -19,6 +19,9 @@ create table if not exists projects (
   link          text,
   year          text not null,
   tagline       text,                    -- one line shown in The Work
+  role          text,                    -- your role, shown in the portfolio PDF
+  demo          text,                    -- live demo URL, shown in the portfolio PDF
+  image         text,                    -- PNG/JPG URL, shown in the portfolio PDF
   decisions     jsonb not null default '[]',   -- [{ title, body }]
   visuals       jsonb not null default '[]',   -- [{ no, caption, type, ...type-specific fields }]
   cover_story   jsonb,                          -- only set on the one "cover" project

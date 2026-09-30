@@ -13,6 +13,9 @@ export function blankProject() {
 
 const VISUAL_TYPES = ["screenshot", "pipeline", "use-case", "moscow"];
 
+/* Columns added by later migrations (see supabase/migrations). */
+const OPTIONAL_COLUMNS = ["tagline", "role", "demo", "image"];
+
 /* Full editor for one project row. Simple text fields are plain inputs;
    `stack` is comma-separated; `decisions` and `visuals` are repeatable
    groups (add/remove a row at a time); `coverStory` only appears when
@@ -31,10 +34,12 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, saving, is
   const submit = async (event) => {
     event.preventDefault();
     const { stackText, coverStory, ...rest } = project;
-    // `tagline` is a column added by the editorial-redesign migration. Leave it
-    // out of the save until the row has it (or you typed one), so saving still
-    // works on a database that has not been migrated yet.
-    if (!("tagline" in initial) && !rest.tagline) delete rest.tagline;
+    // Optional columns come from later migrations. Leave each out of the save
+    // until the row has it (or you typed a value), so saving still works on a
+    // database that has not been migrated yet.
+    for (const column of OPTIONAL_COLUMNS) {
+      if (!(column in initial) && !rest[column]) delete rest[column];
+    }
     const payload = {
       ...rest,
       stack: stackText.split(",").map((s) => s.trim()).filter(Boolean),
@@ -100,6 +105,18 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, saving, is
         <label className="admin-field">
           <span className="mono">CODE LINK (optional)</span>
           <input value={project.link || ""} onChange={set("link")} />
+        </label>
+        <label className="admin-field">
+          <span className="mono">MY ROLE (portfolio PDF)</span>
+          <input value={project.role ?? ""} onChange={set("role")} placeholder="e.g. Team lead, ML pipeline" />
+        </label>
+        <label className="admin-field">
+          <span className="mono">DEMO LINK (optional, portfolio PDF)</span>
+          <input value={project.demo ?? ""} onChange={set("demo")} />
+        </label>
+        <label className="admin-field admin-field--wide">
+          <span className="mono">PDF IMAGE (optional, PNG/JPG URL)</span>
+          <input value={project.image ?? ""} onChange={set("image")} placeholder="https://…/screenshot.png" />
         </label>
       </div>
 

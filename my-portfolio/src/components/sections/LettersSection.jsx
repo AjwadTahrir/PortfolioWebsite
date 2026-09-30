@@ -1,5 +1,7 @@
 import { SITE } from "../../constants/site";
+import { PROFILE } from "../../data/profile";
 import useToday from "../../hooks/useToday";
+import DownloadPortfolioButton from "../DownloadPortfolioButton";
 import "./LettersSection.css";
 
 /* Closing page: contact details, "The end", and the colophon. */
@@ -11,11 +13,12 @@ export default function LettersSection() {
       <div className="letters__body">
         <p className="letters__kicker">Letters to the editor</p>
         <h2 className="letters__name headline">{SITE.displayName}</h2>
-        <p className="letters__role">Software engineer. AI, cloud and product engineering. Open to internships, hackathons and engineering projects.</p>
+        <p className="letters__role">{PROFILE.role}</p>
         <div className="letters__links">
           <a href={`mailto:${SITE.email}`} className="letters__link">Email</a>
           <a href={SITE.githubUrl} className="letters__link">GitHub</a>
           <a href={SITE.linkedinUrl} className="letters__link">LinkedIn</a>
+          <DownloadPortfolioButton />
         </div>
       </div>
 
